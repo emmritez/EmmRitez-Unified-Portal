@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+  <title>Lanka Dahan: Complete 8-Stage Ramayana Edition</title>
+  <!-- PWA Mobile App Meta Tags -->
+  <meta name="theme-color" content="#451a03">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lanka Dahan">
+  <link id="pwa-manifest" rel="manifest">
+  <link id="apple-touch-icon" rel="apple-touch-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      background: radial-gradient(circle at center, #330904 0%, #0a0101 100%);
+    }
+    .hindi-font {
+      font-family: 'Tiro Devanagari Hindi', serif;
+    }
+    canvas {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .gold-cabinet-border {
+      box-shadow: 0 0 0 4px #451a03, 0 0 0 8px #f59e0b, 0 0 30px rgba(245, 158, 11, 0.5);
+    }
+    .touch-btn {
+      transition: transform 0.05s ease, filter 0.05s ease;
+      touch-action: none;
+    }
+    .touch-btn:active, .touch-btn.active-press {
+      transform: scale(0.92);
+      filter: brightness(1.3);
+    }
+    /* Landscape Mobile Viewport Optimization */
+    @media (max-height: 540px) and (orientation: landscape) {
+      body {
+        padding: 0 !important;
+        height: 100dvh;
+        overflow: hidden;
+      }
+      #game-header, #game-footer {
+        display: none !important;
+      }
+      #arcade-main {
+        max-width: 100vw !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        justify-content: space-between;
+      }
+      #top-hud {
+        border-radius: 0 !important;
+        border-width: 0 0 2px 0 !important;
+        padding: 3px 10px !important;
+        z-index: 25;
+      }
+      #canvas-wrapper {
+        flex: 1;
+        width: 100vw;
+        height: calc(100dvh - 28px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+      }
+      #gameCanvas {
+        width: auto !important;
+        height: 100% !important;
+        max-width: 100vw;
+        object-fit: contain;
+      }
+      #mobile-controls {
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        margin-top: 0 !important;
+        padding: 0 16px !important;
+        z-index: 25;
+        pointer-events: none;
+      }
+      #mobile-controls .touch-btn {
+        pointer-events: auto;
+        opacity: 0.78;
+        backdrop-filter: blur(2px);
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen text-amber-100 flex flex-col items-center justify-center p-2 sm:p-4 overflow-x-hidden">
+
+  <!-- Game Header -->
+  <header id="game-header" class="text-center mb-2">
+    <div class="flex items-center justify-center gap-2">
+      <span class="text-lg sm:text-2xl text-orange-500 font-bold">&#2384;</span>
+      <h1 class="text-lg sm:text-3xl font-black text-amber-400 tracking-wider drop-shadow-[2px_2px_0px_#7c2d12]">
+        LANKA DAHAN
+      </h1>
+      <span class="text-lg sm:text-2xl text-orange-500 font-bold">&#2384;</span>
+    </div>
+    <p class="text-[8px] sm:text-[10px] text-amber-300/80 mt-1">
+      [<span class="text-yellow-300">A/D / Arrows</span>] Move &bull; [<span class="text-yellow-300">W / Space</span>] Jump &bull; [<span class="text-yellow-300">Left Shift / Z / J</span>] Gada Attack
+    </p>
+  </header>
+
+  <!-- Arcade Enclosure -->
+  <main id="arcade-main" class="relative w-full max-w-4xl flex flex-col items-center">
+    
+    <!-- Top HUD Banner -->
+    <div id="top-hud" class="w-full bg-stone-950 border-4 border-amber-700/90 rounded-t-xl px-3 py-2 flex flex-wrap justify-between items-center text-[8px] sm:text-[10px] gap-2">
+      <!-- Health Hearts -->
+      <div class="flex items-center gap-1.5">
+        <span class="text-red-400 font-bold">LIFE:</span>
+        <div id="hud-hearts" class="flex gap-1 text-red-500 text-xs sm:text-sm tracking-tighter">
+          &#9829;&#9829;&#9829;&#9829;&#9829;
+        </div>
+      </div>
+
+      <!-- Stage Indicator -->
+      <div class="flex items-center gap-1 bg-amber-950/70 border border-amber-600/60 px-2 py-0.5 rounded">
+        <span class="text-amber-400 font-bold" id="hud-stage">STG 1: GATE</span>
+      </div>
+
+      <!-- Lanka Dahan Fire / Destruction Progress -->
+      <div class="flex items-center gap-1.5" id="dahan-hud-group">
+        <span class="text-orange-500 font-bold">&#128293; DAHAN:</span>
+        <div class="w-20 sm:w-28 bg-stone-800 h-3 border border-orange-500 rounded-sm overflow-hidden p-0.5">
+          <div id="dahan-bar-fill" class="bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 h-full w-0 transition-all duration-200"></div>
+        </div>
+        <span id="dahan-percent" class="text-amber-300 text-[8px] sm:text-[9px]">0%</span>
+      </div>
+
+      <!-- Power-Up, Score & Sound -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-1">
+          <span class="text-slate-400">PWR:</span>
+          <span id="hud-power" class="text-yellow-300 font-bold bg-amber-950/90 border border-amber-600 px-1.5 py-0.5 rounded text-[8px]">NONE</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="text-amber-400">PTS:</span>
+          <span id="hud-score" class="text-white">0</span>
+        </div>
+        <button id="btn-bgm-toggle" class="bg-stone-900 border border-amber-700 px-1.5 py-1 rounded text-[8px] text-emerald-300 hover:bg-stone-800 cursor-pointer">
+          BGM: ON
+        </button>
+        <button id="btn-sound-toggle" class="bg-stone-900 border border-amber-700 px-1.5 py-1 rounded text-[8px] text-amber-300 hover:bg-stone-800 cursor-pointer">
+          SFX: ON
+        </button>
+      </div>
+    </div>
+
+    <!-- Canvas Frame -->
+    <div id="canvas-wrapper" class="relative w-full bg-black gold-cabinet-border overflow-hidden rounded-b-lg">
+      <canvas id="gameCanvas" width="800" height="450" class="w-full h-auto block aspect-[16/9] bg-[#1a0808]"></canvas>
+
+      <!-- Hidden Secret Divine Cheat Menu (Toggled via `~` / `Tab` or typing `CHEAT`) -->
+      <div id="secret-cheat-panel" class="hidden absolute top-3 right-3 bg-stone-950/95 border-2 border-yellow-400 rounded-lg p-3 z-30 text-[8px] sm:text-[9px] shadow-[0_0_20px_rgba(250,204,21,0.4)] max-w-[230px]">
+        <div class="flex justify-between items-center border-b border-amber-800 pb-1.5 mb-2">
+          <span class="text-yellow-300 font-bold tracking-wider">&#10024; DIVINE MANTRAS</span>
+          <button id="close-cheat-panel" class="text-red-400 hover:text-red-300 font-bold px-1 cursor-pointer">X</button>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <button onclick="activateCheat('RAM')" class="bg-amber-900/70 hover:bg-amber-800 border border-amber-500/60 rounded px-2 py-1 text-left text-amber-100 cursor-pointer">
+            <span class="text-yellow-300 font-bold">[RAM]</span> God Mode (Amar)
+          </button>
+          <button onclick="activateCheat('AGNI')" class="bg-amber-900/70 hover:bg-amber-800 border border-amber-500/60 rounded px-2 py-1 text-left text-amber-100 cursor-pointer">
+            <span class="text-yellow-300 font-bold">[AGNI]</span> Agni Fire &amp; Tail
+          </button>
+          <button onclick="activateCheat('MAHAKAYA')" class="bg-amber-900/70 hover:bg-amber-800 border border-amber-500/60 rounded px-2 py-1 text-left text-amber-100 cursor-pointer">
+            <span class="text-yellow-300 font-bold">[MAHAKAYA]</span> Giant Form
+          </button>
+          <button onclick="activateCheat('DAHAN')" class="bg-amber-900/70 hover:bg-amber-800 border border-amber-500/60 rounded px-2 py-1 text-left text-amber-100 cursor-pointer">
+            <span class="text-yellow-300 font-bold">[DAHAN]</span> Burn All Palaces
+          </button>
+          <button onclick="activateCheat('NEXT')" class="bg-amber-900/70 hover:bg-amber-800 border border-amber-500/60 rounded px-2 py-1 text-left text-amber-100 cursor-pointer">
+            <span class="text-yellow-300 font-bold">[NEXT]</span> Skip Stage / Boss
+          </button>
+        </div>
+      </div>
+
+      <!-- Dynamic Game Modal (Start Screen with Stage Select, Stage Clear, Game Over, Victory) -->
+      <div id="game-modal" class="absolute inset-0 bg-stone-950/92 flex flex-col items-center justify-center p-4 sm:p-6 text-center z-20 backdrop-blur-sm overflow-y-auto">
+        <div class="text-amber-500 text-[10px] sm:text-xs mb-1 tracking-widest uppercase">Valmiki Ramayana &bull; Sundara Kanda</div>
+        <h2 id="modal-title" class="text-xl sm:text-3xl text-amber-400 mb-2 drop-shadow-[2px_2px_0px_#991b1b]">
+          JAI SHREE RAM
+        </h2>
+        <p id="modal-desc" class="text-[10px] sm:text-xs text-amber-100/90 max-w-xl leading-relaxed mb-4">
+          Leap across the ocean to Golden Lanka! Defeat Lankini, smash and burn Lanka's palaces with your sacred Gada &amp; blazing tail, battle Akshay Kumar and Meghnad, and meet Mata Sita!
+        </p>
+
+        <!-- Primary Action Button -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-4">
+          <button id="modal-action-btn" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 active:scale-95 text-stone-950 px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-bold text-xs sm:text-sm tracking-wider border-2 border-yellow-200 shadow-[0_4px_0_#7c2d12] cursor-pointer">
+            START JOURNEY (STAGE 1)
+          </button>
+          <button id="btn-install-pwa" class="hidden bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white px-4 py-2.5 sm:py-3 rounded-lg font-bold text-xs sm:text-sm tracking-wider border-2 border-emerald-200 shadow-[0_4px_0_#064e3b] cursor-pointer">
+            &#128241; INSTALL APP
+          </button>
+        </div>
+
+        <!-- 8-Stage Direct Selector Grid -->
+        <div id="stage-select-container" class="w-full max-w-xl border-t border-amber-800/70 pt-3">
+          <div class="text-[9px] text-amber-300 mb-2 uppercase tracking-wider">Or Select Any Stage Directly:</div>
+          <div id="stage-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 sm:gap-2 text-[8px] sm:text-[9px]">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+
+        <!-- Overlay Developer Credit -->
+        <div class="mt-3 text-[9px] sm:text-[10px] text-amber-400/90 tracking-wide">
+          Developed by <span class="font-bold text-yellow-300">EmmRitez</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Touch Controls Bar -->
+    <div id="mobile-controls" class="w-full flex justify-between items-center mt-3 px-2 sm:px-6 select-none">
+      <!-- Movement Pad -->
+      <div class="flex gap-2">
+        <button id="touch-left" class="touch-btn w-14 h-14 sm:w-16 sm:h-16 bg-stone-900 text-amber-400 border-2 border-amber-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-[0_4px_0_#451a03]">
+          &larr;
+        </button>
+        <button id="touch-right" class="touch-btn w-14 h-14 sm:w-16 sm:h-16 bg-stone-900 text-amber-400 border-2 border-amber-700 rounded-xl flex items-center justify-center text-xl font-bold shadow-[0_4px_0_#451a03]">
+          &rarr;
+        </button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button id="touch-jump" class="touch-btn w-14 h-14 sm:w-16 sm:h-16 bg-amber-700 text-amber-100 border-2 border-yellow-400 rounded-xl flex flex-col items-center justify-center text-[10px] font-bold shadow-[0_4px_0_#78350f]">
+          <span class="text-base">&#9650;</span>
+          <span>JUMP</span>
+        </button>
+        <button id="touch-attack" class="touch-btn w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-red-600 to-orange-700 text-yellow-200 border-2 border-yellow-300 rounded-2xl flex flex-col items-center justify-center text-xs font-bold shadow-[0_5px_0_#7f1d1d]">
+          <span class="text-base sm:text-lg">&#9876;</span>
+          <span>GADA</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Developer Credit Footer -->
+  <footer id="game-footer" class="mt-4 text-[10px] sm:text-xs text-amber-300 font-semibold tracking-wider text-center drop-shadow-[1px_1px_0px_#000]">
+    Developed by <span class="text-yellow-400">EmmRitez</span>
+  </footer>
+
+  <script>
+    // ==========================================
+    // 1. WEB AUDIO API RETRO SYNTHESIZER & BGM
+    // ==========================================
+    class MythicAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.sfxEnabled = true;
+        this.bgmEnabled = true;
+        this.bgmInterval = null;
+        this.bgmStep = 0;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+        this.startBGM();
+      }
+
+      playTone(freq, type, duration, vol = 0.12, slideTo = null) {
+        if (!this.sfxEnabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+        if (slideTo) osc.frequency.exponentialRampToValueAtTime(slideTo, now + duration);
+        gain.gain.setValueAtTime(vol, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + duration + 0.01);
+      }
+
+      // Resounding Shankhnaad (Conch Shell) Fanfare
+      playShankhnaad() {
+        if (!this.sfxEnabled || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc1.type = 'sawtooth';
+        osc2.type = 'triangle';
+        osc1.frequency.setValueAtTime(220, now);
+        osc1.frequency.exponentialRampToValueAtTime(330, now + 0.35);
+        osc1.frequency.setValueAtTime(330, now + 1.1);
+        osc1.frequency.exponentialRampToValueAtTime(293.66, now + 1.45);
+        osc2.frequency.setValueAtTime(440, now);
+        osc2.frequency.exponentialRampToValueAtTime(660, now + 0.35);
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.14, now + 0.25);
+        gain.gain.setValueAtTime(0.13, now + 1.0);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 1.52);
+        osc2.stop(now + 1.52);
+      }
+
+      // Traditional Indian Heroic Raag BGM Loop
+      startBGM() {
+        if (this.bgmInterval) return;
+        const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 440.00, 392.00];
+        this.bgmInterval = setInterval(() => {
+          if (!this.bgmEnabled || !this.ctx || gameState === 'START' || gameState === 'GAMEOVER') return;
+          const now = this.ctx.currentTime;
+          const note = scale[this.bgmStep % scale.length];
+
+          // Sitar/Veena melodic pluck
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(note, now);
+          gain.gain.setValueAtTime(0.045, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.34);
+
+          // Tabla/Dholak rhythmic pulse every 2nd beat
+          if (this.bgmStep % 2 === 0) {
+            const drum = this.ctx.createOscillator();
+            const dGain = this.ctx.createGain();
+            drum.type = 'sine';
+            drum.frequency.setValueAtTime(115, now);
+            drum.frequency.exponentialRampToValueAtTime(48, now + 0.12);
+            dGain.gain.setValueAtTime(0.08, now);
+            dGain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
+            drum.connect(dGain);
+            dGain.connect(this.ctx.destination);
+            drum.start(now);
+            drum.stop(now + 0.14);
+          }
+          this.bgmStep++;
+        }, 340);
+      }
+
+      playJump() { this.playTone(170, 'square', 0.16, 0.1, 460); }
+      playGadaSwing() { this.playTone(150, 'sawtooth', 0.12, 0.12, 65); }
+      playSmash() {
+        this.playTone(110, 'square', 0.2, 0.18, 35);
+        setTimeout(() => this.playTone(75, 'sawtooth', 0.25, 0.15, 25), 50);
+      }
+      playFireBlast() { this.playTone(540, 'sawtooth', 0.18, 0.1, 160); }
+      playPowerUp() {
+        [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => {
+          setTimeout(() => this.playTone(f, 'triangle', 0.12, 0.14), i * 65);
+        });
+      }
+      playHurt() { this.playTone(210, 'sawtooth', 0.26, 0.16, 75); }
+      playVictoryFanfare() {
+        this.playShankhnaad();
+        const notes = [392, 440, 523.25, 659.25, 783.99];
+        notes.forEach((n, idx) => {
+          setTimeout(() => this.playTone(n, 'triangle', 0.22, 0.15), 400 + idx * 130);
+        });
+      }
+    }
+
+    const sfx = new MythicAudioEngine();
+
+    // ==========================================
+    // 2. CANVAS & GAME CONSTANTS (BALANCED PACING)
+    // ==========================================
+    const CANVAS = document.getElementById('gameCanvas');
+    const CTX = CANVAS.getContext('2d');
+    const V_WIDTH = 800;
+    const V_HEIGHT = 450;
+    const GROUND_Y = 390;
+
+    // Smoothed physics pacing (~25% slower horizontal travel for comfortable control)
+    const GRAVITY = 0.52;
+    const BASE_SPEED = 3.2;
+    const JUMP_FORCE = -11.4;
+
+    const keys = { left: false, right: false, jump: false, attack: false, jumpLock: false };
+
+    let gameState = 'START'; // 'START' | 'INTRO_LEAP' | 'PLAYING' | 'STAGE_CLEAR' | 'SITA_FINALE' | 'GAMEOVER' | 'VICTORY'
+    let score = 0;
+    let cameraX = 0;
+    let screenShake = 0;
+    let currentStageIndex = 0;
+    let stageClearedFlag = false;
+    let godMode = false;
+    let cheatKeyBuffer = '';
+
+    // Entities
+    let palaces = [];
+    let enemies = [];
+    let projectiles = [];
+    let powerCapsules = [];
+    let powerOrbs = [];
+    let particles = [];
+    let floatingTexts = [];
+    let currentBoss = null;
+
+    // ==========================================
+    // 3. 8-STAGE CAMPAIGN DEFINITIONS
+    // ==========================================
+    const STAGES = [
+      { id: 1, short: 'GATE', title: 'Stage 1: Lanka Main Gate', subtitle: 'Battle with Gatekeeper Lankini', desc: 'Defeat Lankini at the golden entrance and ignite the outer watchtowers!', length: 2400, requiredDahan: 65, bossType: 'LANKINI', enemyRate: 1, skyTop: '#2a0808', skyBot: '#7c2d12' },
+      { id: 2, short: 'STREETS', title: 'Stage 2: Golden Streets', subtitle: 'Swarna Nagari Avenue', desc: 'March down Lanka’s glittering avenues, smash golden mansions, and defeat patrol Rakshasas.', length: 2800, requiredDahan: 70, bossType: null, enemyRate: 1.2, skyTop: '#3b0712', skyBot: '#9a3412' },
+      { id: 3, short: 'OUTSKIRTS', title: 'Stage 3: Ashok Vatika Edge', subtitle: 'Guardians of the Royal Grove', desc: 'Clear the demon guards patrolling the perimeter of Ashok Vatika.', length: 3000, requiredDahan: 70, bossType: null, enemyRate: 1.35, skyTop: '#1e1b4b', skyBot: '#831843' },
+      { id: 4, short: 'KINKARA', title: 'Stage 4: Kinkara Regiment', subtitle: 'Ravana’s Elite Strike Force', desc: 'Fierce Kinkarasura warriors charge in waves! Use Contra power orbs to prevail.', length: 3200, requiredDahan: 75, bossType: null, enemyRate: 1.5, skyTop: '#450a0a', skyBot: '#b45309' },
+      { id: 5, short: 'CHAITYA', title: 'Stage 5: Chaitya Palace', subtitle: 'The Towering Pillar Citadel', desc: 'Demolish the grand Chaitya Palace structures and ignite the royal district!', length: 3400, requiredDahan: 80, bossType: null, enemyRate: 1.6, skyTop: '#4c0519', skyBot: '#c2410c' },
+      { id: 6, short: 'AKSHAY', title: 'Stage 6: Prince Akshay Kumar', subtitle: '1st Main Boss: Ravana’s Younger Son', desc: 'Akshay Kumar rides his golden war chariot with rapid celestial arrows! Shatter his chariot!', length: 2600, requiredDahan: 60, bossType: 'AKSHAY', enemyRate: 1.3, skyTop: '#2e1065', skyBot: '#991b1b' },
+      { id: 7, short: 'HIGHWAY', title: 'Stage 7: Royal Fire Highway', subtitle: 'Lanka Ablaze', desc: 'The entire city burns! Dash across roaring flames and defeat Ravana’s commanders.', length: 3500, requiredDahan: 80, bossType: null, enemyRate: 1.75, skyTop: '#450a0a', skyBot: '#ea580c' },
+      { id: 8, short: 'MEGHNAD', title: 'Stage 8: Meghnad & Mata Sita', subtitle: 'Final Boss: Indrajit & Ashok Vatika', desc: 'Defeat Ravana’s eldest son Meghnad and his Maya illusions to reunite with Mata Sita!', length: 2800, requiredDahan: 65, bossType: 'MEGHNAD', enemyRate: 1.4, skyTop: '#170312', skyBot: '#7f1d1d' }
+    ];
+
+    // ==========================================
+    // 4. HANUMAN JI (HERO PLAYER)
+    // ==========================================
+    class Hanuman {
+      constructor() { this.fullReset(); }
+
+      fullReset() {
+        this.x = 90;
+        this.y = GROUND_Y - 52;
+        this.baseW = 34;
+        this.baseH = 52;
+        this.w = this.baseW;
+        this.h = this.baseH;
+        this.vx = 0;
+        this.vy = 0;
+        this.facing = 1;
+        this.grounded = true;
+        this.hp = 5;
+        this.maxHp = 5;
+        this.invuln = 0;
+        this.attackTimer = 0;
+        this.attackCooldown = 0;
+        this.walkFrame = 0;
+        this.powerType = 'NONE'; // 'NONE' | 'AGNI' | 'MAHAKAYA' | 'KAVACH' | 'VAYU'
+        this.powerTimer = 0;
+      }
+
+      spawnForStage(x = 120) {
+        this.x = x;
+        this.y = GROUND_Y - this.h;
+        this.vx = 0;
+        this.vy = 0;
+        this.grounded = true;
+        this.attackTimer = 0;
+      }
+
+      applyPower(type) {
+        this.powerType = type;
+        this.powerTimer = 950; // ~16 seconds
+        sfx.playPowerUp();
+        if (type === 'MAHAKAYA') {
+          this.w = 52;
+          this.h = 80;
+          this.y -= 28;
+        } else {
+          this.w = this.baseW;
+          this.h = this.baseH;
+        }
+        updateHUD();
+        const names = {
+          AGNI: 'AGNI FIRE & BLAZING TAIL!',
+          MAHAKAYA: 'MAHAKAYA GIANT FORM!',
+          KAVACH: 'DIVINE KAVACH SHIELD!',
+          VAYU: 'VAYU WIND SPEED!'
+        };
+        floatingTexts.push(new FloatingText(names[type], this.x - 30, this.y - 25, '#fde047'));
+      }
+
+      update() {
+        if (this.powerTimer > 0) {
+          this.powerTimer--;
+          if (this.powerTimer <= 0) {
+            this.powerType = 'NONE';
+            this.w = this.baseW;
+            this.h = this.baseH;
+            updateHUD();
+          }
+        }
+
+        if (this.invuln > 0) this.invuln--;
+        if (this.attackTimer > 0) this.attackTimer--;
+        if (this.attackCooldown > 0) this.attackCooldown--;
+
+        const speedMult = this.powerType === 'VAYU' ? 1.4 : 1.0;
+        const jumpMult = this.powerType === 'VAYU' ? 1.15 : 1.0;
+
+        if (keys.left) {
+          this.vx = -BASE_SPEED * speedMult;
+          this.facing = -1;
+        } else if (keys.right) {
+          this.vx = BASE_SPEED * speedMult;
+          this.facing = 1;
+        } else {
+          this.vx *= 0.78;
+          if (Math.abs(this.vx) < 0.1) this.vx = 0;
+        }
+
+        if (keys.jump && this.grounded && !keys.jumpLock) {
+          this.vy = JUMP_FORCE * jumpMult;
+          this.grounded = false;
+          keys.jumpLock = true;
+          sfx.playJump();
+        }
+
+        if (keys.attack && this.attackCooldown === 0) {
+          this.performGadaAttack();
+        }
+
+        this.vy += GRAVITY;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        const stageLen = STAGES[currentStageIndex].length;
+        if (this.x < cameraX + 10) this.x = cameraX + 10;
+        if (this.x > stageLen - this.w - 20) this.x = stageLen - this.w - 20;
+
+        if (this.y + this.h >= GROUND_Y) {
+          this.y = GROUND_Y - this.h;
+          this.vy = 0;
+          this.grounded = true;
+        }
+
+        if (this.grounded && Math.abs(this.vx) > 0.3) {
+          this.walkFrame += 0.18;
+        } else {
+          this.walkFrame = 0;
+        }
+
+        // Blazing Tail Lanka Dahan Effect: When AGNI active or Dahan >= 50%, jumping past palaces ignites them
+        const dahanPct = calculateDahanPercent();
+        if (this.powerType === 'AGNI' || dahanPct >= 50) {
+          if (Math.random() < 0.45) {
+            particles.push(new FireParticle(this.x + (this.facing === 1 ? -8 : this.w + 8), this.y + this.h * 0.55));
+          }
+          palaces.forEach(p => {
+            if (!p.isVibhishana && !p.burning && Math.abs((this.x + this.w / 2) - (p.x + p.w / 2)) < p.w * 0.65) {
+              p.takeDamage(1, true);
+            }
+          });
+        }
+      }
+
+      performGadaAttack() {
+        this.attackTimer = 14;
+        this.attackCooldown = 20;
+        sfx.playGadaSwing();
+
+        const reach = this.powerType === 'MAHAKAYA' ? 75 : 54;
+        const hitX = this.facing === 1 ? this.x + this.w : this.x - reach;
+        const hitBox = { x: hitX, y: this.y - 10, w: reach, h: this.h + 15 };
+        const dmg = this.powerType === 'MAHAKAYA' ? 4 : 2;
+
+        // 1. Smash Palaces
+        palaces.forEach(p => {
+          if (rectIntersect(hitBox, p)) p.takeDamage(dmg, false);
+        });
+
+        // 2. Hit Boss
+        if (currentBoss && !currentBoss.dead && rectIntersect(hitBox, currentBoss)) {
+          currentBoss.takeDamage(dmg);
+        }
+
+        // 3. Hit Demon Soldiers
+        enemies.forEach(e => {
+          if (!e.dead && rectIntersect(hitBox, e)) e.takeDamage(dmg);
+        });
+
+        // 4. Crack Flying Contra Power Capsules
+        powerCapsules.forEach(cap => {
+          if (!cap.destroyed && rectIntersect(hitBox, cap)) cap.crackOpen();
+        });
+
+        // 5. Launch Agni Fire Wave if AGNI power active
+        if (this.powerType === 'AGNI') {
+          sfx.playFireBlast();
+          projectiles.push(new Projectile(
+            this.facing === 1 ? this.x + this.w + 8 : this.x - 20,
+            this.y + this.h * 0.35,
+            this.facing * 7.2,
+            0,
+            'HERO_AGNI'
+          ));
+        }
+      }
+
+      takeDamage() {
+        if (godMode || this.invuln > 0) return;
+        if (this.powerType === 'KAVACH') {
+          this.powerType = 'NONE';
+          this.powerTimer = 0;
+          this.invuln = 60;
+          sfx.playHurt();
+          updateHUD();
+          floatingTexts.push(new FloatingText('KAVACH ABSORBED HIT!', this.x - 20, this.y - 20, '#38bdf8'));
+          return;
+        }
+        this.hp--;
+        this.invuln = 75;
+        this.vy = -5.5;
+        screenShake = 8;
+        sfx.playHurt();
+        updateHUD();
+        if (this.hp <= 0) triggerGameOver();
+      }
+
+      draw() {
+        if (this.invuln > 0 && Math.floor(this.invuln / 4) % 2 === 0) return;
+
+        CTX.save();
+        CTX.translate(Math.round(this.x), Math.round(this.y));
+        const scale = this.powerType === 'MAHAKAYA' ? 1.52 : 1.0;
+        CTX.scale(scale, scale);
+
+        if (this.facing === -1) {
+          CTX.scale(-1, 1);
+          CTX.translate(-this.baseW, 0);
+        }
+
+        // Kavach Aura
+        if (this.powerType === 'KAVACH') {
+          CTX.strokeStyle = '#38bdf8';
+          CTX.lineWidth = 2.5;
+          CTX.beginPath();
+          CTX.arc(this.baseW / 2, this.baseH / 2, 32, 0, Math.PI * 2);
+          CTX.stroke();
+        }
+
+        // Raised Tail (Blazing if AGNI active)
+        CTX.strokeStyle = (this.powerType === 'AGNI' || calculateDahanPercent() >= 50) ? '#f97316' : '#d97706';
+        CTX.lineWidth = 4;
+        CTX.beginPath();
+        CTX.moveTo(6, 36);
+        CTX.quadraticCurveTo(-12, 22, -6, 6);
+        CTX.stroke();
+
+        if (this.powerType === 'AGNI' || calculateDahanPercent() >= 50) {
+          CTX.fillStyle = '#fef08a';
+          CTX.beginPath();
+          CTX.arc(-6, 5, 6 + Math.sin(Date.now() * 0.02) * 2, 0, Math.PI * 2);
+          CTX.fill();
+        }
+
+        // Divine Halo
+        CTX.strokeStyle = 'rgba(253, 224, 71, 0.7)';
+        CTX.lineWidth = 2;
+        CTX.beginPath();
+        CTX.arc(17, 10, 12, 0, Math.PI * 2);
+        CTX.stroke();
+
+        // Golden Mukut (Crown)
+        CTX.fillStyle = '#facc15';
+        CTX.fillRect(10, 0, 14, 5);
+        CTX.fillRect(13, -4, 8, 4);
+
+        // Face & Tilak
+        CTX.fillStyle = '#fdba74';
+        CTX.fillRect(9, 5, 16, 12);
+        CTX.fillStyle = '#dc2626';
+        CTX.fillRect(19, 6, 2, 5);
+        CTX.fillStyle = '#000';
+        CTX.fillRect(21, 9, 2, 2);
+
+        // Muscular Torso & Sacred Janeu
+        CTX.fillStyle = '#f97316';
+        CTX.fillRect(7, 17, 20, 16);
+        CTX.strokeStyle = '#fff';
+        CTX.lineWidth = 1.5;
+        CTX.beginPath();
+        CTX.moveTo(10, 17);
+        CTX.lineTo(24, 32);
+        CTX.stroke();
+
+        // Saffron Dhoti
+        CTX.fillStyle = '#ea580c';
+        CTX.fillRect(8, 33, 18, 10);
+        CTX.fillStyle = '#facc15';
+        CTX.fillRect(8, 33, 18, 3);
+
+        // Legs
+        const stride = Math.sin(this.walkFrame) * 4;
+        CTX.fillStyle = '#fdba74';
+        CTX.fillRect(9 - stride, 43, 6, 9);
+        CTX.fillRect(19 + stride, 43, 6, 9);
+
+        // Sacred Golden Gada
+        CTX.save();
+        if (this.attackTimer > 0) {
+          CTX.translate(26, 22);
+          CTX.rotate(Math.PI / 2.2);
+        } else {
+          CTX.translate(24, 24);
+          CTX.rotate(-Math.PI / 5);
+        }
+        CTX.fillStyle = '#ca8a04';
+        CTX.fillRect(-2, -18, 4, 22);
+        CTX.fillStyle = '#facc15';
+        CTX.beginPath();
+        CTX.arc(0, -22, 8, 0, Math.PI * 2);
+        CTX.fill();
+        CTX.strokeStyle = '#92400e';
+        CTX.lineWidth = 1.5;
+        CTX.stroke();
+        CTX.restore();
+
+        CTX.restore();
+      }
+    }
+
+    const hero = new Hanuman();
+
+    // ==========================================
+    // 5. DESTRUCTIBLE LANKA PALACES
+    // ==========================================
+    class LankaPalace {
+      constructor(x, w, h, isVibhishana = false) {
+        this.x = x;
+        this.y = GROUND_Y - h;
+        this.w = w;
+        this.h = h;
+        this.isVibhishana = isVibhishana;
+        this.maxHp = isVibhishana ? 999 : 4;
+        this.hp = this.maxHp;
+        this.burning = false;
+        this.destroyed = false;
+      }
+
+      takeDamage(dmg, silent = false) {
+        if (this.destroyed) return;
+        if (this.isVibhishana) {
+          if (!silent) {
+            floatingTexts.push(new FloatingText('VIBHISHANA BHAVAN (SAFE +1 HEART)', this.x - 20, this.y - 16, '#4ade80'));
+            if (hero.hp < hero.maxHp) {
+              hero.hp++;
+              updateHUD();
+            }
+            score += 200;
+            updateHUD();
+          }
+          return;
+        }
+
+        this.hp -= dmg;
+        this.burning = true;
+        if (!silent) {
+          sfx.playSmash();
+          screenShake = 5;
+        }
+        for (let i = 0; i < 6; i++) {
+          particles.push(new FireParticle(this.x + Math.random() * this.w, this.y + Math.random() * this.h));
+        }
+
+        if (this.hp <= 0 && !this.destroyed) {
+          this.destroyed = true;
+          this.h = Math.floor(this.h * 0.42);
+          this.y = GROUND_Y - this.h;
+          score += 300;
+          sfx.playSmash();
+          screenShake = 9;
+          floatingTexts.push(new FloatingText('LANKA DAHAN! +300', this.x, this.y - 15, '#fb923c'));
+          updateHUD();
+          checkStageCompletion();
+        }
+      }
+
+      update() {
+        if (this.burning && Math.random() < 0.35) {
+          particles.push(new FireParticle(this.x + 8 + Math.random() * (this.w - 16), this.y + Math.random() * 14));
+        }
+      }
+
+      draw() {
+        if (this.isVibhishana) {
+          CTX.fillStyle = '#f8fafc';
+          CTX.fillRect(this.x, this.y, this.w, this.h);
+          CTX.strokeStyle = '#38bdf8';
+          CTX.lineWidth = 3;
+          CTX.strokeRect(this.x, this.y, this.w, this.h);
+          CTX.fillStyle = '#0284c7';
+          CTX.beginPath();
+          CTX.moveTo(this.x - 6, this.y);
+          CTX.lineTo(this.x + this.w / 2, this.y - 24);
+          CTX.lineTo(this.x + this.w + 6, this.y);
+          CTX.fill();
+          CTX.fillStyle = '#ea580c';
+          CTX.font = '9px "Press Start 2P"';
+          CTX.fillText('RAM', this.x + this.w / 2 - 14, this.y + 32);
+          return;
+        }
+
+        CTX.fillStyle = this.destroyed ? '#78350f' : '#d97706';
+        CTX.fillRect(this.x, this.y, this.w, this.h);
+        CTX.strokeStyle = this.destroyed ? '#451a03' : '#fde047';
+        CTX.lineWidth = 2;
+        CTX.strokeRect(this.x, this.y, this.w, this.h);
+
+        if (!this.destroyed) {
+          CTX.fillStyle = '#f59e0b';
+          CTX.beginPath();
+          CTX.moveTo(this.x - 6, this.y);
+          CTX.lineTo(this.x + this.w / 2, this.y - 26);
+          CTX.lineTo(this.x + this.w + 6, this.y);
+          CTX.fill();
+
+          CTX.fillStyle = this.burning ? '#ef4444' : '#451a03';
+          for (let wx = this.x + 12; wx < this.x + this.w - 18; wx += 24) {
+            CTX.fillRect(wx, this.y + 18, 12, 18);
+          }
+        }
+      }
+    }
+
+    // ==========================================
+    // 6. CONTRA-STYLE FLYING POWER PODS & ORBS
+    // ==========================================
+    class FlyingPowerPod {
+      constructor(x, y, type) {
+        this.x = x;
+        this.y = y;
+        this.w = 34;
+        this.h = 22;
+        this.type = type;
+        this.destroyed = false;
+        this.wingAnim = 0;
+      }
+
+      update() {
+        if (this.destroyed) return;
+        this.x -= 1.6;
+        this.wingAnim += 0.22;
+        this.y += Math.sin(this.wingAnim * 0.5) * 0.8;
+      }
+
+      crackOpen() {
+        this.destroyed = true;
+        sfx.playPowerUp();
+        powerOrbs.push(new PowerOrb(this.x, this.y, this.type));
+      }
+
+      draw() {
+        if (this.destroyed) return;
+        CTX.save();
+        CTX.translate(this.x + this.w / 2, this.y + this.h / 2);
+        const flap = Math.sin(this.wingAnim) * 8;
+        CTX.fillStyle = '#fde047';
+        CTX.beginPath();
+        CTX.moveTo(-6, 0);
+        CTX.lineTo(-18, -12 + flap);
+        CTX.lineTo(-4, -4);
+        CTX.moveTo(6, 0);
+        CTX.lineTo(18, -12 + flap);
+        CTX.lineTo(4, -4);
+        CTX.fill();
+
+        CTX.fillStyle = '#dc2626';
+        CTX.beginPath();
+        CTX.ellipse(0, 0, 14, 9, 0, 0, Math.PI * 2);
+        CTX.fill();
+        CTX.strokeStyle = '#facc15';
+        CTX.lineWidth = 2;
+        CTX.stroke();
+        CTX.restore();
+      }
+    }
+
+    class PowerOrb {
+      constructor(x, y, type) {
+        this.x = x;
+        this.y = y;
+        this.w = 26;
+        this.h = 26;
+        this.type = type;
+        this.vy = -3.8;
+        this.collected = false;
+      }
+
+      update() {
+        if (this.collected) return;
+        this.vy += 0.22;
+        this.y += this.vy;
+        if (this.y + this.h >= GROUND_Y) {
+          this.y = GROUND_Y - this.h;
+          this.vy = 0;
+        }
+        if (rectIntersect(this, hero)) {
+          this.collected = true;
+          hero.applyPower(this.type);
+          score += 250;
+          updateHUD();
+        }
+      }
+
+      draw() {
+        if (this.collected) return;
+        const colors = { AGNI: '#ef4444', MAHAKAYA: '#f59e0b', KAVACH: '#0284c7', VAYU: '#10b981' };
+        CTX.fillStyle = colors[this.type] || '#f59e0b';
+        CTX.beginPath();
+        CTX.arc(this.x + 13, this.y + 13, 13, 0, Math.PI * 2);
+        CTX.fill();
+        CTX.strokeStyle = '#ffffff';
+        CTX.lineWidth = 2;
+        CTX.stroke();
+
+        CTX.fillStyle = '#ffffff';
+        CTX.font = '11px "Press Start 2P"';
+        CTX.fillText(this.type[0], this.x + 8, this.y + 18);
+      }
+    }
+
+    // ==========================================
+    // 7. RAKSHASA ENEMIES (MALE & FEMALE)
+    // ==========================================
+    class Rakshasa {
+      constructor(x, variant = 'MALE') {
+        this.x = x;
+        this.y = GROUND_Y - 46;
+        this.w = 32;
+        this.h = 46;
+        this.variant = variant; // 'MALE' | 'FEMALE'
+        this.vx = variant === 'FEMALE' ? -1.4 : -1.1;
+        this.hp = variant === 'MALE' ? 2 : 1;
+        this.dead = false;
+        this.shootTimer = 95 + Math.floor(Math.random() * 80);
+      }
+
+      update() {
+        if (this.dead) return;
+        this.x += this.vx;
+
+        if (this.x < cameraX - 60) this.vx = Math.abs(this.vx);
+        if (this.x > cameraX + V_WIDTH + 60) this.vx = -Math.abs(this.vx);
+
+        this.shootTimer--;
+        if (this.shootTimer <= 0 && Math.abs(this.x - hero.x) < 420) {
+          this.shootTimer = 145;
+          const dir = hero.x < this.x ? -1 : 1;
+          projectiles.push(new Projectile(
+            this.x + (dir === 1 ? this.w : -10),
+            this.y + 18,
+            dir * 3.6,
+            0,
+            this.variant === 'FEMALE' ? 'POISON_ARROW' : 'SPEAR'
+          ));
+        }
+
+        if (rectIntersect(this, hero)) {
+          hero.takeDamage();
+        }
+      }
+
+      takeDamage(dmg) {
+        this.hp -= dmg;
+        sfx.playSmash();
+        if (this.hp <= 0) {
+          this.dead = true;
+          score += 150;
+          updateHUD();
+          floatingTexts.push(new FloatingText('+150', this.x, this.y - 10, '#f87171'));
+          for (let i = 0; i < 8; i++) particles.push(new FireParticle(this.x + 14, this.y + 20));
+        }
+      }
+
+      draw() {
+        if (this.dead) return;
+        CTX.save();
+        CTX.translate(Math.round(this.x), Math.round(this.y));
+
+        CTX.fillStyle = this.variant === 'FEMALE' ? '#581c87' : '#7f1d1d';
+        CTX.fillRect(6, 14, 20, 22);
+
+        CTX.fillStyle = this.variant === 'FEMALE' ? '#a855f7' : '#b91c1c';
+        CTX.fillRect(8, 2, 16, 12);
+
+        CTX.fillStyle = '#fde047';
+        CTX.fillRect(8, -3, 3, 5);
+        CTX.fillRect(21, -3, 3, 5);
+
+        CTX.fillStyle = '#fef08a';
+        CTX.fillRect(10, 6, 3, 3);
+        CTX.fillRect(19, 6, 3, 3);
+
+        CTX.fillStyle = '#1c1917';
+        CTX.fillRect(8, 36, 6, 10);
+        CTX.fillRect(18, 36, 6, 10);
+        CTX.restore();
+      }
+    }
+
+    // ==========================================
+    // 8. BOSS BATTLES (LANKINI, AKSHAY, MEGHNAD)
+    // ==========================================
+    class Boss {
+      constructor(type, arenaX) {
+        this.type = type; // 'LANKINI' | 'AKSHAY' | 'MEGHNAD'
+        this.x = arenaX;
+        this.y = GROUND_Y - 76;
+        this.w = type === 'AKSHAY' ? 68 : 48;
+        this.h = type === 'AKSHAY' ? 76 : 72;
+        this.maxHp = type === 'LANKINI' ? 12 : (type === 'AKSHAY' ? 20 : 28);
+        this.hp = this.maxHp;
+        this.dead = false;
+        this.dir = -1;
+        this.actionTimer = 75;
+        this.teleportFlash = 0;
+      }
+
+      update() {
+        if (this.dead) return;
+        if (this.teleportFlash > 0) this.teleportFlash--;
+
+        const arenaMin = cameraX + 40;
+        const arenaMax = cameraX + V_WIDTH - this.w - 40;
+        const moveSpeed = this.type === 'LANKINI' ? 1.5 : (this.type === 'AKSHAY' ? 2.1 : 1.8);
+
+        this.x += this.dir * moveSpeed;
+        if (this.x <= arenaMin) { this.x = arenaMin; this.dir = 1; }
+        if (this.x >= arenaMax) { this.x = arenaMax; this.dir = -1; }
+
+        this.actionTimer--;
+        if (this.actionTimer <= 0) {
+          this.performSpecialAttack();
+        }
+
+        if (rectIntersect(this, hero)) {
+          hero.takeDamage();
+        }
+      }
+
+      performSpecialAttack() {
+        const dirToHero = hero.x < this.x ? -1 : 1;
+
+        if (this.type === 'LANKINI') {
+          this.actionTimer = 95;
+          projectiles.push(new Projectile(this.x, this.y + 30, dirToHero * 4.2, 0, 'DARK_WAVE'));
+        } else if (this.type === 'AKSHAY') {
+          this.actionTimer = 90;
+          [-1.2, 0, 1.2].forEach(vy => {
+            projectiles.push(new Projectile(this.x + this.w / 2, this.y + 24, dirToHero * 4.8, vy, 'GOLD_ARROW'));
+          });
+        } else if (this.type === 'MEGHNAD') {
+          this.actionTimer = 85;
+          if (Math.random() < 0.45) {
+            this.x = cameraX + 80 + Math.random() * (V_WIDTH - 200);
+            this.teleportFlash = 18;
+            floatingTexts.push(new FloatingText('MAYA ILLUSION!', this.x, this.y - 14, '#c084fc'));
+          }
+          projectiles.push(new Projectile(this.x + 15, this.y + 25, dirToHero * 5.0, 0, 'BRAHMASTRA'));
+          projectiles.push(new Projectile(hero.x + 10, 40, 0, 4.4, 'LIGHTNING'));
+        }
+      }
+
+      takeDamage(dmg) {
+        if (this.dead) return;
+        this.hp -= dmg;
+        sfx.playSmash();
+        screenShake = 6;
+        for (let i = 0; i < 6; i++) particles.push(new FireParticle(this.x + this.w / 2, this.y + 30));
+
+        if (this.hp <= 0) {
+          this.dead = true;
+          score += 1500;
+          updateHUD();
+          sfx.playShankhnaad();
+          floatingTexts.push(new FloatingText(`${this.type} DEFEATED! +1500`, this.x - 30, this.y - 20, '#4ade80'));
+          checkStageCompletion();
+        }
+      }
+
+      draw() {
+        if (this.dead) return;
+        CTX.save();
+        CTX.translate(Math.round(this.x), Math.round(this.y));
+        if (this.teleportFlash > 0) CTX.globalAlpha = 0.45;
+
+        if (this.type === 'LANKINI') {
+          CTX.fillStyle = '#4c1d95';
+          CTX.fillRect(8, 18, 32, 44);
+          CTX.fillStyle = '#7e22ce';
+          CTX.fillRect(12, 2, 24, 16);
+          CTX.fillStyle = '#facc15';
+          CTX.fillRect(12, -3, 24, 5);
+          CTX.strokeStyle = '#e2e8f0';
+          CTX.lineWidth = 3;
+          CTX.beginPath();
+          CTX.moveTo(this.dir === 1 ? 42 : 4, 8);
+          CTX.lineTo(this.dir === 1 ? 42 : 4, 68);
+          CTX.stroke();
+        } else if (this.type === 'AKSHAY') {
+          CTX.fillStyle = '#eab308';
+          CTX.fillRect(4, 42, 60, 22);
+          CTX.strokeStyle = '#fef08a';
+          CTX.lineWidth = 2;
+          CTX.strokeRect(4, 42, 60, 22);
+          CTX.fillStyle = '#78350f';
+          CTX.beginPath();
+          CTX.arc(16, 66, 10, 0, Math.PI * 2);
+          CTX.arc(52, 66, 10, 0, Math.PI * 2);
+          CTX.fill();
+          CTX.fillStyle = '#dc2626';
+          CTX.fillRect(22, 16, 24, 26);
+          CTX.fillStyle = '#facc15';
+          CTX.fillRect(24, 2, 20, 6);
+          CTX.fillStyle = '#fdba74';
+          CTX.fillRect(25, 8, 18, 10);
+        } else if (this.type === 'MEGHNAD') {
+          CTX.fillStyle = '#1e1b4b';
+          CTX.fillRect(8, 18, 32, 44);
+          CTX.strokeStyle = '#a855f7';
+          CTX.lineWidth = 2;
+          CTX.strokeRect(8, 18, 32, 44);
+          CTX.fillStyle = '#facc15';
+          CTX.fillRect(12, -4, 24, 8);
+          CTX.fillStyle = '#c4b5fd';
+          CTX.fillRect(14, 4, 20, 14);
+          CTX.strokeStyle = '#38bdf8';
+          CTX.lineWidth = 3;
+          CTX.beginPath();
+          CTX.arc(24, 34, 18, -Math.PI / 2, Math.PI / 2);
+          CTX.stroke();
+        }
+        CTX.restore();
+
+        // Boss Health Bar at Top of Canvas
+        const barW = 280;
+        const bx = (V_WIDTH - barW) / 2;
+        CTX.fillStyle = 'rgba(0,0,0,0.75)';
+        CTX.fillRect(bx - 4, 14, barW + 8, 22);
+        CTX.fillStyle = '#dc2626';
+        CTX.fillRect(bx, 18, barW * Math.max(0, this.hp / this.maxHp), 14);
+        CTX.strokeStyle = '#facc15';
+        CTX.lineWidth = 2;
+        CTX.strokeRect(bx, 18, barW, 14);
+        CTX.fillStyle = '#ffffff';
+        CTX.font = '9px "Press Start 2P"';
+        CTX.fillText(`BOSS: ${this.type}`, bx + 8, 29);
+      }
+    }
+
+    // ==========================================
+    // 9. PROJECTILES & FIRE PARTICLES
+    // ==========================================
+    class Projectile {
+      constructor(x, y, vx, vy, kind) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.kind = kind;
+        this.w = kind === 'HERO_AGNI' ? 22 : 16;
+        this.h = kind === 'LIGHTNING' ? 26 : 12;
+        this.life = 130;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.life--;
+
+        if (this.kind === 'HERO_AGNI') {
+          palaces.forEach(p => {
+            if (!p.isVibhishana && rectIntersect(this, p)) {
+              p.takeDamage(2, false);
+              this.life = 0;
+            }
+          });
+          enemies.forEach(e => {
+            if (!e.dead && rectIntersect(this, e)) {
+              e.takeDamage(2);
+              this.life = 0;
+            }
+          });
+          if (currentBoss && !currentBoss.dead && rectIntersect(this, currentBoss)) {
+            currentBoss.takeDamage(2);
+            this.life = 0;
+          }
+        } else {
+          if (rectIntersect(this, hero)) {
+            hero.takeDamage();
+            this.life = 0;
+          }
+        }
+      }
+
+      draw() {
+        const colors = {
+          HERO_AGNI: '#f97316',
+          SPEAR: '#cbd5e1',
+          POISON_ARROW: '#a855f7',
+          DARK_WAVE: '#9333ea',
+          GOLD_ARROW: '#facc15',
+          BRAHMASTRA: '#38bdf8',
+          LIGHTNING: '#fde047'
+        };
+        CTX.fillStyle = colors[this.kind] || '#facc15';
+        CTX.fillRect(this.x, this.y, this.w, this.h);
+      }
+    }
+
+    class FireParticle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vy = -1 - Math.random() * 2;
+        this.vx = (Math.random() - 0.5) * 1.4;
+        this.size = 4 + Math.random() * 5;
+        this.life = 22 + Math.floor(Math.random() * 14);
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.size *= 0.95;
+        this.life--;
+      }
+      draw() {
+        CTX.fillStyle = this.life > 14 ? '#facc15' : '#ea580c';
+        CTX.fillRect(this.x, this.y, this.size, this.size);
+      }
+    }
+
+    class FloatingText {
+      constructor(text, x, y, color = '#fff') {
+        this.text = text;
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.life = 55;
+      }
+      update() {
+        this.y -= 0.7;
+        this.life--;
+      }
+      draw() {
+        CTX.fillStyle = this.color;
+        CTX.font = '9px "Press Start 2P"';
+        CTX.fillText(this.text, this.x, this.y);
+      }
+    }
+
+    // ==========================================
+    // 10. STAGE BUILDER & PROGRESSION
+    // ==========================================
+    function loadStage(index) {
+      currentStageIndex = index;
+      stageClearedFlag = false;
+      const stage = STAGES[index];
+
+      palaces = [];
+      enemies = [];
+      projectiles = [];
+      powerCapsules = [];
+      powerOrbs = [];
+      particles = [];
+      floatingTexts = [];
+      currentBoss = null;
+
+      cameraX = 0;
+      hero.spawnForStage(100);
+
+      // Build Golden Palaces along the stage
+      const palaceCount = Math.floor(stage.length / 240);
+      for (let i = 1; i < palaceCount; i++) {
+        const px = i * 240 + 40;
+        const pw = 80 + (i % 3) * 20;
+        const ph = 75 + (i % 3) * 28;
+        const isVibhishana = (i === Math.floor(palaceCount / 2));
+        palaces.push(new LankaPalace(px, pw, ph, isVibhishana));
+      }
+
+      // Spawn Demon Soldiers
+      const enemyCount = Math.floor((stage.length / 320) * stage.enemyRate);
+      for (let i = 1; i <= enemyCount; i++) {
+        const ex = 420 + i * 260;
+        if (ex < stage.length - 350) {
+          enemies.push(new Rakshasa(ex, i % 2 === 0 ? 'FEMALE' : 'MALE'));
+        }
+      }
+      // Spawn Contra-Style Flying Power Capsules (25% lower altitude for easier Gada hits)
+      const pTypes = ['AGNI', 'MAHAKAYA', 'KAVACH', 'VAYU'];
+      for (let i = 0; i < 4; i++) {
+        const podY = Math.round(GROUND_Y - (GROUND_Y - (120 + (i % 2) * 40)) * 0.75);
+        powerCapsules.push(new FlyingPowerPod(650 + i * 620, podY, pTypes[i % pTypes.length]));
+      }
+
+      // Spawn Stage Boss if defined
+      if (stage.bossType) {
+        currentBoss = new Boss(stage.bossType, stage.length - 260);
+      }
+
+      updateHUD();
+
+      if (index === 0) {
+        gameState = 'INTRO_LEAP';
+        hero.x = -40;
+        hero.y = 80;
+        hero.vx = 5.2;
+        hero.vy = -4;
+        sfx.playShankhnaad();
+      } else {
+        gameState = 'PLAYING';
+        if (stage.bossType) sfx.playShankhnaad();
+      }
+    }
+
+    function startFullJourney() {
+      sfx.init();
+      score = 0;
+      hero.fullReset();
+      modal.classList.add('hidden');
+      loadStage(0);
+    }
+
+    function calculateDahanPercent() {
+      const burnable = palaces.filter(p => !p.isVibhishana);
+      if (burnable.length === 0) return 100;
+      const burned = burnable.filter(p => p.destroyed).length;
+      return Math.min(100, Math.round((burned / burnable.length) * 100));
+    }
+
+    function checkStageCompletion() {
+      if (stageClearedFlag) return;
+      const stage = STAGES[currentStageIndex];
+      const dahanOk = calculateDahanPercent() >= stage.requiredDahan;
+      const bossOk = !currentBoss || currentBoss.dead;
+
+      if (dahanOk && bossOk) {
+        stageClearedFlag = true;
+        if (currentStageIndex === STAGES.length - 1) {
+          gameState = 'SITA_FINALE';
+          sfx.playVictoryFanfare();
+          setTimeout(triggerFinalVictory, 4200);
+        } else {
+          setTimeout(triggerStageClearModal, 900);
+        }
+      }
+    }
+
+    // ==========================================
+    // 11. RENDERING (WORLD, INTRO LEAP, SITA FINALE)
+    // ==========================================
+    function drawWorld() {
+      const stage = STAGES[currentStageIndex];
+      const grad = CTX.createLinearGradient(0, 0, 0, V_HEIGHT);
+      grad.addColorStop(0, stage.skyTop);
+      grad.addColorStop(1, stage.skyBot);
+      CTX.fillStyle = grad;
+      CTX.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+
+      // Golden Moon / Sun Emblem
+      CTX.fillStyle = 'rgba(253, 224, 71, 0.25)';
+      CTX.beginPath();
+      CTX.arc(640, 90, 48, 0, Math.PI * 2);
+      CTX.fill();
+
+      // Ground Road
+      CTX.fillStyle = '#451a03';
+      CTX.fillRect(0, GROUND_Y, V_WIDTH, V_HEIGHT - GROUND_Y);
+      CTX.fillStyle = '#f59e0b';
+      CTX.fillRect(0, GROUND_Y, V_WIDTH, 5);
+    }
+
+    function drawSitaFinale() {
+      CTX.fillStyle = '#064e3b';
+      CTX.fillRect(0, 0, V_WIDTH, V_HEIGHT);
+      CTX.fillStyle = '#065f46';
+      CTX.fillRect(0, GROUND_Y, V_WIDTH, V_HEIGHT - GROUND_Y);
+
+      // Ashoka Tree Canopy
+      CTX.fillStyle = '#15803d';
+      CTX.beginPath();
+      CTX.arc(520, 180, 110, 0, Math.PI * 2);
+      CTX.fill();
+      CTX.fillStyle = '#78350f';
+      CTX.fillRect(505, 220, 30, 170);
+
+      // Mata Sita Sprite
+      CTX.fillStyle = '#facc15';
+      CTX.fillRect(545, GROUND_Y - 48, 24, 48);
+      CTX.fillStyle = '#fdba74';
+      CTX.fillRect(550, GROUND_Y - 62, 14, 14);
+
+      // Kneeling Hanuman Ji offering Mudrika Ring
+      hero.x = 450;
+      hero.y = GROUND_Y - hero.h;
+      hero.facing = 1;
+      hero.draw();
+
+      CTX.fillStyle = '#fef08a';
+      CTX.font = '12px "Press Start 2P"';
+      CTX.fillText('ASHOK VATIKA: MATA SITA MILAN', 210, 70);
+      CTX.font = '9px "Press Start 2P"';
+      CTX.fillText('Hanuman Ji presents Lord Ram\'s Mudrika Ring!', 195, 100);
+    }
+
+    function update() {
+      if (gameState === 'INTRO_LEAP') {
+        hero.x += hero.vx;
+        hero.vy += 0.25;
+        hero.y += hero.vy;
+        if (hero.y + hero.h >= GROUND_Y) {
+          hero.y = GROUND_Y - hero.h;
+          hero.vx = 0;
+          hero.vy = 0;
+          screenShake = 10;
+          gameState = 'PLAYING';
+          floatingTexts.push(new FloatingText('LANDED AT LANKA GATE!', hero.x, hero.y - 20, '#fde047'));
+        }
+        return;
+      }
+
+      if (gameState !== 'PLAYING') return;
+
+      hero.update();
+
+      const stage = STAGES[currentStageIndex];
+      const targetCam = Math.max(0, Math.min(stage.length - V_WIDTH, hero.x - V_WIDTH * 0.35));
+      cameraX += (targetCam - cameraX) * 0.1;
+
+      palaces.forEach(p => p.update());
+      enemies.forEach(e => e.update());
+      powerCapsules.forEach(c => c.update());
+      powerOrbs.forEach(o => o.update());
+      if (currentBoss) currentBoss.update();
+
+      for (let i = projectiles.length - 1; i >= 0; i--) {
+        projectiles[i].update();
+        if (projectiles[i].life <= 0) projectiles.splice(i, 1);
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        if (particles[i].life <= 0) particles.splice(i, 1);
+      }
+
+      for (let i = floatingTexts.length - 1; i >= 0; i--) {
+        floatingTexts[i].update();
+        if (floatingTexts[i].life <= 0) floatingTexts.splice(i, 1);
+      }
+
+      checkStageCompletion();
+    }
+
+    function render() {
+      CTX.save();
+      if (screenShake > 0) {
+        CTX.translate((Math.random() - 0.5) * screenShake, (Math.random() - 0.5) * screenShake);
+        screenShake--;
+      }
+
+      if (gameState === 'SITA_FINALE') {
+        drawSitaFinale();
+        CTX.restore();
+        return;
+      }
+
+      drawWorld();
+
+      CTX.save();
+      CTX.translate(-Math.round(cameraX), 0);
+
+      palaces.forEach(p => p.draw());
+      powerCapsules.forEach(c => c.draw());
+      powerOrbs.forEach(o => o.draw());
+      enemies.forEach(e => e.draw());
+      projectiles.forEach(pr => pr.draw());
+      particles.forEach(pt => pt.draw());
+      hero.draw();
+      floatingTexts.forEach(ft => ft.draw());
+
+      CTX.restore();
+
+      if (currentBoss) currentBoss.draw();
+      CTX.restore();
+    }
+
+    function gameLoop() {
+      update();
+      render();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // ==========================================
+    // 12. HUD & HELPER FUNCTIONS
+    // ==========================================
+    function rectIntersect(a, b) {
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function updateHUD() {
+      const heartsEl = document.getElementById('hud-hearts');
+      heartsEl.innerHTML = '&#9829;'.repeat(Math.max(0, hero.hp)) + '<span class="text-stone-700">' + '&#9829;'.repeat(Math.max(0, hero.maxHp - hero.hp)) + '</span>';
+      document.getElementById('hud-stage').textContent = `STG ${currentStageIndex + 1}: ${STAGES[currentStageIndex].short}`;
+      const dahanPct = calculateDahanPercent();
+      document.getElementById('dahan-bar-fill').style.width = `${dahanPct}%`;
+      document.getElementById('dahan-percent').textContent = `${dahanPct}%`;
+      document.getElementById('hud-power').textContent = hero.powerType;
+      document.getElementById('hud-score').textContent = score;
+    }
+
+    // ==========================================
+    // 13. MODALS & STAGE SELECTOR UI
+    // ==========================================
+    const modal = document.getElementById('game-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDesc = document.getElementById('modal-desc');
+    const modalBtn = document.getElementById('modal-action-btn');
+    const stageSelectContainer = document.getElementById('stage-select-container');
+    const stageGrid = document.getElementById('stage-grid');
+
+    function populateStageGrid() {
+      stageGrid.innerHTML = '';
+      STAGES.forEach((stg, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'bg-stone-900 hover:bg-amber-900/80 border border-amber-700/80 rounded px-2 py-1.5 text-amber-200 transition cursor-pointer truncate';
+        btn.textContent = `${stg.id}. ${stg.short}`;
+        btn.onclick = () => {
+          sfx.init();
+          score = 0;
+          hero.fullReset();
+          modal.classList.add('hidden');
+          loadStage(idx);
+        };
+        stageGrid.appendChild(btn);
+      });
+    }
+
+    function triggerStageClearModal() {
+      gameState = 'STAGE_CLEAR';
+      const stage = STAGES[currentStageIndex];
+      const nextStage = STAGES[currentStageIndex + 1];
+
+      modal.classList.remove('hidden');
+      stageSelectContainer.classList.add('hidden');
+      modalTitle.textContent = `${stage.title.toUpperCase()} CLEARED!`;
+      modalTitle.className = 'text-lg sm:text-2xl text-emerald-400 mb-3';
+      modalDesc.textContent = `${stage.subtitle} completed! Current Score: ${score}. Prepare for ${nextStage.title}: ${nextStage.desc}`;
+      modalBtn.textContent = `PROCEED TO STAGE ${nextStage.id}`;
+      modalBtn.onclick = () => {
+        modal.classList.add('hidden');
+        loadStage(currentStageIndex + 1);
+      };
+    }
+
+    function triggerGameOver() {
+      gameState = 'GAMEOVER';
+      modal.classList.remove('hidden');
+      stageSelectContainer.classList.remove('hidden');
+      modalTitle.textContent = 'FALLEN IN BATTLE';
+      modalTitle.className = 'text-xl sm:text-3xl text-red-500 mb-3';
+      modalDesc.textContent = `Chant "Jai Shree Ram" and rise again! Final Score: ${score}`;
+      modalBtn.textContent = `RETRY STAGE ${currentStageIndex + 1}`;
+      modalBtn.onclick = () => {
+        modal.classList.add('hidden');
+        hero.hp = hero.maxHp;
+        loadStage(currentStageIndex);
+      };
+    }
+
+    function triggerFinalVictory() {
+      gameState = 'VICTORY';
+      sfx.playVictoryFanfare();
+      modal.classList.remove('hidden');
+      stageSelectContainer.classList.remove('hidden');
+      modalTitle.textContent = 'JAI SHREE RAM! VICTORY!';
+      modalTitle.className = 'text-xl sm:text-3xl text-amber-400 mb-3';
+      modalDesc.textContent = `Lanka Dahan is complete! Meghnad is vanquished and Hanuman Ji has received Mata Sita's sacred blessings in Ashok Vatika. Total Score: ${score}!`;
+      modalBtn.textContent = 'PLAY AGAIN (STAGE 1)';
+      modalBtn.onclick = startFullJourney;
+    }
+
+    // ==========================================
+    // 14. KEYBOARD & TOUCH INPUTS
+    // ==========================================
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowLeft', 'KeyA'].includes(e.code)) keys.left = true;
+      if (['ArrowRight', 'KeyD'].includes(e.code)) keys.right = true;
+      if (['ArrowUp', 'KeyW', 'Space'].includes(e.code)) {
+        keys.jump = true;
+        e.preventDefault();
+      }
+      if (['ShiftLeft', 'KeyZ', 'KeyJ', 'Enter'].includes(e.code)) {
+        keys.attack = true;
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('keyup', (e) => {
+      if (['ArrowLeft', 'KeyA'].includes(e.code)) keys.left = false;
+      if (['ArrowRight', 'KeyD'].includes(e.code)) keys.right = false;
+      if (['ArrowUp', 'KeyW', 'Space'].includes(e.code)) {
+        keys.jump = false;
+        keys.jumpLock = false;
+      }
+      if (['ShiftLeft', 'KeyZ', 'KeyJ', 'Enter'].includes(e.code)) keys.attack = false;
+    });
+
+    // Secret Divine Cheat System (No visible button on screen)
+    const secretCheatPanel = document.getElementById('secret-cheat-panel');
+    document.getElementById('close-cheat-panel').addEventListener('click', () => {
+      secretCheatPanel.classList.add('hidden');
+    });
+
+    function activateCheat(code) {
+      sfx.init();
+      if (code === 'CHEAT') {
+        secretCheatPanel.classList.toggle('hidden');
+        return;
+      }
+      if (code === 'RAM') {
+        godMode = !godMode;
+        hero.hp = hero.maxHp;
+        sfx.playPowerUp();
+        updateHUD();
+        floatingTexts.push(new FloatingText(godMode ? 'JAI SHREE RAM: GOD MODE ON!' : 'GOD MODE OFF', hero.x - 30, hero.y - 30, '#fde047'));
+      } else if (code === 'AGNI') {
+        hero.applyPower('AGNI');
+      } else if (code === 'MAHAKAYA') {
+        hero.applyPower('MAHAKAYA');
+      } else if (code === 'KAVACH') {
+        hero.applyPower('KAVACH');
+      } else if (code === 'VAYU') {
+        hero.applyPower('VAYU');
+      } else if (code === 'DAHAN') {
+        palaces.forEach(p => {
+          if (!p.isVibhishana && !p.destroyed) p.takeDamage(99, true);
+        });
+        sfx.playSmash();
+        floatingTexts.push(new FloatingText('SARVA LANKA DAHAN!', hero.x - 20, hero.y - 30, '#fb923c'));
+      } else if (code === 'NEXT') {
+        if (currentBoss && !currentBoss.dead) currentBoss.takeDamage(999);
+        palaces.forEach(p => {
+          if (!p.isVibhishana && !p.destroyed) p.takeDamage(99, true);
+        });
+        checkStageCompletion();
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      // Press `~` (Backquote) or `Tab` to quietly toggle the secret Divine Mantras panel
+      if (e.code === 'Backquote' || e.code === 'Tab') {
+        e.preventDefault();
+        secretCheatPanel.classList.toggle('hidden');
+        return;
+      }
+      // Listen for typed cheat keywords directly during gameplay
+      if (e.key && e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+        cheatKeyBuffer = (cheatKeyBuffer + e.key.toUpperCase()).slice(-12);
+        const cheatWords = ['CHEAT', 'RAM', 'AGNI', 'MAHAKAYA', 'KAVACH', 'VAYU', 'DAHAN', 'NEXT'];
+        for (const word of cheatWords) {
+          if (cheatKeyBuffer.endsWith(word)) {
+            activateCheat(word);
+            cheatKeyBuffer = '';
+            break;
+          }
+        }
+      }
+    });
+
+    function bindTouchButton(id, keyName, unlockJump = false) {
+      const btn = document.getElementById(id);
+      const press = (e) => {
+        e.preventDefault();
+        sfx.init();
+        keys[keyName] = true;
+        btn.classList.add('active-press');
+      };
+      const release = (e) => {
+        e.preventDefault();
+        keys[keyName] = false;
+        if (unlockJump) keys.jumpLock = false;
+        btn.classList.remove('active-press');
+      };
+      btn.addEventListener('touchstart', press, { passive: false });
+      btn.addEventListener('touchend', release, { passive: false });
+      btn.addEventListener('mousedown', press);
+      btn.addEventListener('mouseup', release);
+      btn.addEventListener('mouseleave', release);
+    }
+
+    bindTouchButton('touch-left', 'left');
+    bindTouchButton('touch-right', 'right');
+    bindTouchButton('touch-jump', 'jump', true);
+    bindTouchButton('touch-attack', 'attack');
+
+    const sfxBtn = document.getElementById('btn-sound-toggle');
+    sfxBtn.addEventListener('click', () => {
+      sfx.init();
+      sfx.sfxEnabled = !sfx.sfxEnabled;
+      sfxBtn.textContent = sfx.sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
+      sfxBtn.classList.toggle('text-amber-300', sfx.sfxEnabled);
+      sfxBtn.classList.toggle('text-slate-400', !sfx.sfxEnabled);
+    });
+
+    const bgmBtn = document.getElementById('btn-bgm-toggle');
+    bgmBtn.addEventListener('click', () => {
+      sfx.init();
+      sfx.bgmEnabled = !sfx.bgmEnabled;
+      bgmBtn.textContent = sfx.bgmEnabled ? 'BGM: ON' : 'BGM: OFF';
+      bgmBtn.classList.toggle('text-emerald-300', sfx.bgmEnabled);
+      bgmBtn.classList.toggle('text-slate-400', !sfx.bgmEnabled);
+    });
+
+    modalBtn.onclick = startFullJourney;
+
+    // ==========================================
+    // 15. PWA MANIFEST, ICON & INSTALL SUPPORT
+    // ==========================================
+    function setupPWA() {
+      // Custom Hanuman Gada & Om SVG Home Screen Icon
+      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#9a3412"/>
+            <stop offset="100%" stop-color="#2a0808"/>
+          </radialGradient>
+        </defs>
+        <rect width="512" height="512" rx="110" fill="url(#bg)" stroke="#f59e0b" stroke-width="20"/>
+        <circle cx="256" cy="220" r="115" fill="none" stroke="#fde047" stroke-width="10" opacity="0.6"/>
+        <rect x="242" y="240" width="28" height="190" rx="10" fill="#ca8a04"/>
+        <circle cx="256" cy="195" r="78" fill="#facc15" stroke="#78350f" stroke-width="12"/>
+        <path d="M256 90 L272 120 L240 120 Z" fill="#fef08a"/>
+        <text x="256" y="218" font-size="68" font-weight="bold" text-anchor="middle" fill="#991b1b" font-family="serif">&#2384;</text>
+      </svg>`;
+      const iconUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(iconSvg);
+      document.getElementById('apple-touch-icon').href = iconUrl;
+
+      // Dynamic Web App Manifest
+      const manifestData = {
+        name: 'Lanka Dahan: Ramayana Action Game',
+        short_name: 'Lanka Dahan',
+        description: 'Play as Hanuman Ji in an 8-stage Ramayana action platformer!',
+        start_url: window.location.href,
+        display: 'fullscreen',
+        orientation: 'landscape',
+        background_color: '#1a0808',
+        theme_color: '#451a03',
+        icons: [
+          { src: iconUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
+          { src: iconUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
+        ]
+      };
+      const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
+      document.getElementById('pwa-manifest').href = URL.createObjectURL(manifestBlob);
+
+      // Register lightweight Service Worker for installability & offline play (when hosted over HTTPS)
+      if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+        const swCode = `
+          const CACHE_NAME = 'lanka-dahan-v1';
+          self.addEventListener('install', (e) => {
+            self.skipWaiting();
+            e.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(['./'])));
+          });
+          self.addEventListener('fetch', (e) => {
+            e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+          });
+        `;
+        const swBlob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
+      }
+
+      // Capture Mobile Browser Install Prompt
+      let deferredInstallPrompt = null;
+      const installBtn = document.getElementById('btn-install-pwa');
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        installBtn.classList.remove('hidden');
+      });
+
+      installBtn.addEventListener('click', async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        const { outcome } = await deferredInstallPrompt.userChoice;
+        if (outcome === 'accepted') {
+          installBtn.classList.add('hidden');
+        }
+        deferredInstallPrompt = null;
+      });
+    }
+
+    window.onload = () => {
+      setupPWA();
+      populateStageGrid();
+      gameLoop();
+    };
+  </script>
+</body>
+</html>
