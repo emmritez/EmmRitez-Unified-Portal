@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmmRitez - All in One Hub | Games, SHIKSHA & Portals</title>
+    <title>EmmRitez - All in One Hub | Games, Education & Portals</title>
 
     <!-- PWA Meta Tags & Dynamic Favicon / Manifest -->
     <meta name="theme-color" content="#0f172a">
@@ -55,6 +55,16 @@
             border-color: rgba(99, 102, 241, 0.45);
             box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.35);
         }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .dynamic-banner-bg {
+            background: linear-gradient(120deg, rgba(79, 70, 229, 0.22), rgba(147, 51, 234, 0.20), rgba(236, 72, 153, 0.22), rgba(16, 185, 129, 0.16));
+            background-size: 300% 300%;
+            animation: gradientShift 10s ease infinite;
+        }
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -79,24 +89,33 @@
     <!-- Navigation Bar -->
     <header class="sticky top-0 z-40 glass-card border-b border-slate-800/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-2">
-            <!-- Custom SVG Brand Logo -->
-            <div class="flex items-center space-x-3 cursor-pointer shrink-0" onclick="switchTab('home')">
-                <svg class="w-12 h-12 rounded-xl shadow-lg shadow-indigo-500/30 shrink-0" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="erGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stop-color="#4f46e5"/>
-                            <stop offset="55%" stop-color="#9333ea"/>
-                            <stop offset="100%" stop-color="#ec4899"/>
-                        </linearGradient>
-                    </defs>
-                    <rect width="64" height="64" rx="16" fill="url(#erGrad)"/>
-                    <rect x="3" y="3" width="58" height="58" rx="13" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
-                    <path d="M16 20H32V25H22V29.5H30V34.5H22V39H32V44H16V20Z" fill="white"/>
-                    <path d="M36 20H45.5C49.5 20 52 22.4 52 26.2C52 29.1 50.3 31.2 47.6 31.9L52.8 44H46.8L42.3 32.8H41V44H36V20ZM41 24.5V28.7H45C46.5 28.7 47.4 27.9 47.4 26.6C47.4 25.3 46.5 24.5 45 24.5H41Z" fill="#fde047"/>
-                </svg>
+            <!-- EMMRITEZ HUB DYNAMIC LOGO SVG -->
+            <div class="flex items-center space-x-3 cursor-pointer shrink-0 group" onclick="switchTab('home')">
+                <div class="w-12 h-12 rounded-xl shadow-lg shadow-indigo-500/30 shrink-0 overflow-hidden relative transition-all duration-300 group-hover:shadow-pink-500/40 group-hover:scale-105">
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="dynamicErGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#4f46e5">
+                                    <animate attributeName="stop-color" values="#4f46e5; #9333ea; #4f46e5" dur="6s" repeatCount="indefinite"/>
+                                </stop>
+                                <stop offset="50%" stop-color="#9333ea"/>
+                                <stop offset="100%" stop-color="#ec4899">
+                                    <animate attributeName="stop-color" values="#ec4899; #fde047; #ec4899" dur="4s" repeatCount="indefinite"/>
+                                </stop>
+                            </linearGradient>
+                        </defs>
+                        <rect width="64" height="64" rx="16" fill="url(#dynamicErGrad)" class="transition-all duration-500 group-hover:opacity-90"/>
+                        <rect x="3" y="3" width="58" height="58" rx="13" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+                        <!-- Stylized E, R, H letters -->
+                        <path d="M18 18H34V23H23V27.5H32V32.5H23V37H34V42H18V18Z" fill="white" class="transition group-hover:fill-slate-50"/>
+                        <path d="M37 18H46.5C50.5 18 53 20.4 53 24.2C53 27.1 51.3 29.2 48.6 29.9L53.8 42H47.8L43.3 30.8H42V42H37V18ZM42 24.5V28.7H46C47.5 28.7 48.4 27.9 48.4 26.6C48.4 25.3 47.5 24.5 46 24.5H42Z" fill="#fde047" class="transition group-hover:fill-white"/>
+                        <rect x="55" y="18" width="3" height="24" fill="white" opacity="0.25" class="transition group-hover:opacity-50"/>
+                    </svg>
+                    <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+                </div>
                 <div>
-                    <h1 class="font-extrabold text-base sm:text-xl tracking-tight bg-gradient-to-r from-white via-indigo-200 to-pink-400 bg-clip-text text-transparent">EmmRitez Hub</h1>
-                    <p class="text-[11px] text-indigo-400 font-medium">By Ritesh Srivastava</p>
+                    <h1 class="font-extrabold text-base sm:text-xl tracking-tight bg-gradient-to-r from-white via-indigo-200 to-pink-400 bg-clip-text text-transparent transition-all duration-300 group-hover:from-white group-hover:to-white">EmmRitez Hub</h1>
+                    <p class="text-[11px] text-indigo-400 font-medium transition-colors duration-300 group-hover:text-indigo-300">By Ritesh Srivastava</p>
                 </div>
             </div>
 
@@ -142,7 +161,7 @@
                 <i class="fa-solid fa-dice w-6 text-indigo-400"></i><span>HTML Games Hub</span>
             </button>
             <button onclick="switchTab('portals'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition flex items-center space-x-3 text-slate-300 hover:bg-slate-900">
-                <i class="fa-solid fa-globe w-6 text-emerald-400"></i><span>My Portals & Apps (SHIKSHA, ApnaBazaar, V-Tube)</span>
+                <i class="fa-solid fa-globe w-6 text-emerald-400"></i><span>My Portals & Apps (Education, ApnaBazaar, V-Tube)</span>
             </button>
             <button onclick="switchTab('socials'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition flex items-center space-x-3 text-slate-300 hover:bg-slate-900">
                 <i class="fa-solid fa-share-nodes w-6 text-pink-400"></i><span>Social Hub & Links</span>
@@ -158,24 +177,37 @@
 
         <!-- ==================== TAB 1: HOME ==================== -->
         <section id="tab-home" class="tab-content space-y-12">
-            <!-- Hero Banner -->
-            <div class="relative rounded-3xl glass-card overflow-hidden p-8 sm:p-12 lg:p-16 border border-slate-800 text-center lg:text-left shadow-2xl">
+            <!-- Dynamic Hero Banner -->
+            <div class="relative rounded-3xl glass-card dynamic-banner-bg overflow-hidden p-8 sm:p-12 lg:p-16 border border-slate-800 text-center lg:text-left shadow-2xl">
                 <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-gradient-to-br from-indigo-500/20 to-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
                     <div class="lg:col-span-7 space-y-6">
-                        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-semibold tracking-wide uppercase">
-                            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
-                            <span>Official Hub by Ritesh Srivastava</span>
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                            <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/15 border border-indigo-500/35 text-indigo-200 text-xs font-semibold tracking-wide uppercase">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span id="banner-badge">Official Hub by Ritesh Srivastava</span>
+                            </div>
+                            <div class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-slate-900/70 border border-slate-700/80 text-slate-300 text-xs">
+                                <button onclick="prevBannerSlide()" title="Previous Slide" class="px-1.5 py-0.5 hover:text-white cursor-pointer"><i class="fa-solid fa-chevron-left"></i></button>
+                                <button onclick="toggleBannerAutoplay()" id="banner-play-btn" title="Pause / Play" class="px-1.5 py-0.5 hover:text-white cursor-pointer"><i class="fa-solid fa-pause"></i></button>
+                                <button onclick="nextBannerSlide()" title="Next Slide" class="px-1.5 py-0.5 hover:text-white cursor-pointer"><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
                         </div>
+
                         <h2 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                            All-in-One Web Portals <br>
-                            <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent arcade-font text-xl sm:text-2xl lg:text-3xl block mt-3">EMMRITEZ - ALL IN ONE</span>
+                            <span id="banner-headline">All-in-One Web Portals</span>
+                            <span id="banner-subheadline" class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent arcade-font text-xl sm:text-2xl lg:text-3xl block mt-3">EMMRITEZ - ALL IN ONE</span>
                         </h2>
-                        <p class="text-slate-300 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">
-                            Welcome to my central digital hub! Access SHIKSHA Coaching Institute, ApnaBazaar, V-Tube, and play epic browser games directly inside the portal or install as an app.
+
+                        <p id="banner-desc" class="text-slate-200/90 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">
+                            Welcome to my central digital hub! Access Education, ApnaBazaar, V-Tube, and play epic browser games directly inside the portal or install as an app.
                         </p>
-                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-2">
-                            <button onclick="switchTab('games')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-indigo-600/40 transition-all transform hover:-translate-y-0.5 flex items-center space-x-3 text-base cursor-pointer">
+
+                        <!-- Slide Dots -->
+                        <div id="banner-dots" class="flex items-center justify-center lg:justify-start space-x-2"></div>
+
+                        <div class="flex flex-wrap gap-4 justify-center lg:justify-start pt-1">
+                            <button id="banner-primary-btn" onclick="switchTab('games')" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-indigo-600/40 transition-all transform hover:-translate-y-0.5 flex items-center space-x-3 text-base cursor-pointer">
                                 <i class="fa-solid fa-gamepad text-xl"></i>
                                 <span>Play HTML Games</span>
                             </button>
@@ -185,17 +217,25 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Spotlight Card (Manages Custom Photo or Clean Icon Fallback) -->
                     <div class="lg:col-span-5 flex justify-center">
-                        <div class="relative w-72 h-72 sm:w-80 sm:h-80 rounded-3xl bg-gradient-to-tr from-indigo-600/30 via-purple-600/30 to-pink-600/30 p-1 border border-white/10 shadow-2xl">
-                            <div class="w-full h-full rounded-[22px] bg-slate-900 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+                        <div class="relative w-72 h-80 sm:w-80 sm:h-[340px] rounded-3xl bg-gradient-to-tr from-indigo-600/35 via-purple-600/35 to-pink-600/35 p-1 border border-white/10 shadow-2xl">
+                            <div class="w-full h-full rounded-[22px] bg-slate-900/95 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
                                 <div class="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-                                <div class="w-20 h-20 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center mb-4 text-indigo-400 text-4xl shadow-inner">
-                                    <i class="fa-solid fa-rocket animate-bounce"></i>
+
+                                <!-- Custom Photo Container (Shown if SPOTLIGHT_PHOTO is configured and loads) -->
+                                <img id="spotlight-custom-img" src="" alt="EmmRitez Spotlight" class="hidden w-24 h-24 rounded-2xl object-cover border-2 border-indigo-400/60 shadow-lg mb-4 relative z-10">
+
+                                <!-- Default Icon Badge (Shown when no custom photo is set) -->
+                                <div id="spotlight-default-icon" class="w-20 h-20 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center mb-4 text-indigo-400 text-4xl shadow-inner relative z-10">
+                                    <i id="spotlight-icon-fa" class="fa-solid fa-rocket"></i>
                                 </div>
-                                <h3 class="text-xl font-bold text-white mb-1">EmmRitez - All in One</h3>
-                                <p class="text-xs text-slate-400 mb-4">SHIKSHA, ApnaBazaar, V-Tube & Arcade Hub</p>
-                                <button onclick="openShareModal()" class="px-4 py-2 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition cursor-pointer">
-                                    <i class="fa-solid fa-share-nodes mr-1.5"></i>Share Link & QR Code
+
+                                <h3 class="text-xl font-bold text-white mb-1 relative z-10">EmmRitez - All in One</h3>
+                                <p class="text-xs text-slate-400 mb-4 relative z-10">Education, ApnaBazaar, V-Tube &amp; Arcade Hub</p>
+                                <button onclick="openShareModal()" class="px-4 py-2 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition cursor-pointer relative z-10">
+                                    <i class="fa-solid fa-share-nodes mr-1.5"></i>Share Link &amp; QR Code
                                 </button>
                             </div>
                         </div>
@@ -210,7 +250,7 @@
                         <i class="fa-solid fa-globe"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-white">Live Web Apps</h3>
-                    <p class="text-slate-400 text-sm mb-6">Explore SHIKSHA Coaching, ApnaBazaar store, and V-Tube media streaming portal instantly.</p>
+                    <p class="text-slate-400 text-sm mb-6">Explore Education, ApnaBazaar store, and V-Tube media streaming portal instantly.</p>
                     <span class="text-emerald-400 text-sm font-semibold flex items-center group-hover:translate-x-2 transition">
                         View Apps <i class="fa-solid fa-arrow-right ml-2"></i>
                     </span>
@@ -220,7 +260,7 @@
                         <i class="fa-solid fa-gamepad"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-white">3 Epic HTML Games</h3>
-                    <p class="text-slate-400 text-sm mb-6">Play Mystic Warrior 2D[cite: 1], Lanka Dahan (Ramayana)[cite: 2], and THOR 3D Runner[cite: 3] in full-screen theater mode.</p>
+                    <p class="text-slate-400 text-sm mb-6">Play Mystic Warrior 2D[cite: 1, 6], Lanka Dahan (Ramayana)[cite: 2, 6], and THOR 3D Runner[cite: 3, 6] in full-screen theater mode.</p>
                     <span class="text-indigo-400 text-sm font-semibold flex items-center group-hover:translate-x-2 transition">
                         Play Now <i class="fa-solid fa-arrow-right ml-2"></i>
                     </span>
@@ -229,8 +269,8 @@
                     <div class="w-14 h-14 rounded-2xl bg-pink-600/20 border border-pink-500/30 flex items-center justify-center text-pink-400 text-2xl mb-6 group-hover:scale-110 transition">
                         <i class="fa-solid fa-share-nodes"></i>
                     </div>
-                    <h3 class="text-xl font-bold mb-2 text-white">Connect & Social Media</h3>
-                    <p class="text-slate-400 text-sm mb-6">Join @theemmritezshow on YouTube, EmmRitez on Instagram, Facebook & WhatsApp Channel.</p>
+                    <h3 class="text-xl font-bold mb-2 text-white">Connect &amp; Social Media</h3>
+                    <p class="text-slate-400 text-sm mb-6">Join @theemmritezshow on YouTube, EmmRitez on Instagram, Facebook &amp; WhatsApp Channel.</p>
                     <span class="text-pink-400 text-sm font-semibold flex items-center group-hover:translate-x-2 transition">
                         View Links <i class="fa-solid fa-arrow-right ml-2"></i>
                     </span>
@@ -264,9 +304,9 @@
                     <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
                         <div>
                             <h3 class="text-xl font-bold text-white mb-2">Mystic Warrior 2D</h3>
-                            <p class="text-slate-400 text-sm">Classic Contra-style run-and-gun combat with divine weapons (Vajra Bolt, Agni Laser & Sudarshan Chakra)[cite: 1].</p>
+                            <p class="text-slate-400 text-sm">Classic Contra-style run-and-gun combat with divine weapons (Vajra Bolt, Agni Laser &amp; Sudarshan Chakra)[cite: 1].</p>
                         </div>
-                        <button onclick="openGameLauncher('Mystic Warrior 2D', encodeURI('Mystic Warrior 2D.html'))" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="openGameLauncher('Mystic Warrior 2D', 'Mystic Warrior 2D.html')" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
                         </button>
                     </div>
@@ -284,7 +324,7 @@
                             <h3 class="text-xl font-bold text-white mb-2">Lanka Dahan (Ramayana)</h3>
                             <p class="text-slate-400 text-sm">An 8-stage platformer where Hanuman Ji leaps across the ocean, defeats Lankini, and burns Lanka's palaces[cite: 2].</p>
                         </div>
-                        <button onclick="openGameLauncher('Lanka Dahan (Ramayana)', encodeURI('Lanka Dahan (Ramayana).html'))" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-sm transition shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="openGameLauncher('Lanka Dahan (Ramayana)', 'Lanka Dahan (Ramayana).html')" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-sm transition shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
                         </button>
                     </div>
@@ -302,7 +342,7 @@
                             <h3 class="text-xl font-bold text-white mb-2">THOR - Wakanda Runner 3D</h3>
                             <p class="text-slate-400 text-sm">Fast-paced 3D endless runner featuring Thor, Stormbreaker axe throws, Infinity Stones, and Thanos battles[cite: 3].</p>
                         </div>
-                        <button onclick="openGameLauncher('THOR - Wakanda Runner 3D', encodeURI('THOR - Wakanda Runner 3D.html'))" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition shadow-lg shadow-sky-600/30 flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="openGameLauncher('THOR - Wakanda Runner 3D', 'THOR - Wakanda Runner 3D.html')" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition shadow-lg shadow-sky-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
                         </button>
                     </div>
@@ -314,25 +354,25 @@
         <section id="tab-portals" class="tab-content hidden space-y-8">
             <div class="bg-slate-900/40 p-6 rounded-3xl border border-slate-800 text-center max-w-2xl mx-auto">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center">
-                    <i class="fa-solid fa-globe text-emerald-400 mr-3"></i> My Web Apps & Portals
+                    <i class="fa-solid fa-globe text-emerald-400 mr-3"></i> My Web Apps &amp; Portals
                 </h2>
-                <p class="text-slate-400 text-sm mt-2">Explore live applications created by Ritesh Srivastava for coaching, e-commerce, and video streaming.</p>
+                <p class="text-slate-400 text-sm mt-2">Explore live applications created by Ritesh Srivastava for Education, e-commerce, and video streaming.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- SHIKSHA Portal -->
+                <!-- Education Portal -->
                 <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group">
                     <div class="h-44 bg-gradient-to-br from-emerald-950 to-teal-950 relative flex items-center justify-center">
                         <div class="text-5xl text-emerald-300 group-hover:scale-110 transition duration-300">🎓</div>
-                        <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-600/80 backdrop-blur text-white text-xs font-bold">Coaching Portal</div>
+                        <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-600/80 backdrop-blur text-white text-xs font-bold">Education Portal</div>
                     </div>
                     <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
                         <div>
                             <h3 class="text-xl font-bold text-white mb-2">Education</h3>
-                            <p class="text-slate-400 text-sm">Empowering students with structured notes, smart-class worksheets, test series, and direct mentorship.</p>
+                            <p class="text-slate-400 text-sm">Empowering learners with structured notes, practice worksheets, tests, and study resources.</p>
                         </div>
                         <a href="https://emmritez.github.io/SHIKSHA/" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm transition shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Visit SHIKSHA App</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Visit Education Portal</span>
                         </a>
                     </div>
                 </div>
@@ -363,7 +403,7 @@
                     <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
                         <div>
                             <h3 class="text-xl font-bold text-white mb-2">V-Tube Portal</h3>
-                            <p class="text-slate-400 text-sm">A custom video streaming and educational content sharing web portal built for seamless video navigation.</p>
+                            <p class="text-slate-400 text-sm">A custom video streaming and content sharing web portal built for seamless video navigation.</p>
                         </div>
                         <a href="https://emmritez.github.io/V-Tube/" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm transition shadow-lg shadow-purple-600/30 flex items-center justify-center space-x-2">
                             <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Visit V-Tube</span>
@@ -377,7 +417,7 @@
         <section id="tab-socials" class="tab-content hidden space-y-8">
             <div class="bg-slate-900/40 p-6 rounded-3xl border border-slate-800 text-center max-w-2xl mx-auto">
                 <h2 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center justify-center">
-                    <i class="fa-solid fa-share-nodes text-pink-400 mr-3"></i> Connect & Social Hub
+                    <i class="fa-solid fa-share-nodes text-pink-400 mr-3"></i> Connect &amp; Social Hub
                 </h2>
                 <p class="text-slate-400 text-sm mt-2">Stay connected with Ritesh Srivastava across official channels, social media pages, and WhatsApp Channel.</p>
             </div>
@@ -432,7 +472,7 @@
                         <h3 class="text-lg font-bold text-white mb-1 flex items-center">
                             WhatsApp Channel <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-2 text-slate-400"></i>
                         </h3>
-                        <p class="text-slate-400 text-xs sm:text-sm">Join the official WhatsApp Channel for instant links, games & updates.</p>
+                        <p class="text-slate-400 text-xs sm:text-sm">Join the official WhatsApp Channel for instant links, games &amp; updates.</p>
                     </div>
                 </a>
             </div>
@@ -448,17 +488,17 @@
                         </div>
                     </div>
                     <div class="text-center sm:text-left">
-                        <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold uppercase tracking-wider">Founder & Educator</span>
+                        <span class="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold uppercase tracking-wider">Educator &amp; Creator</span>
                         <h2 class="text-3xl font-extrabold text-white mt-2">Ritesh Srivastava</h2>
-                        <p class="text-indigo-400 font-medium text-sm mt-1">Educator, Creator & Builder of SHIKSHA Institute</p>
+                        <p class="text-indigo-400 font-medium text-sm mt-1">Educator, Creator &amp; Builder of Education, Games &amp; Web Portals</p>
                     </div>
                 </div>
                 <div class="space-y-4 text-slate-300 text-base leading-relaxed border-t border-slate-800 pt-6">
                     <p>
-                        Hello everyone! I am <strong class="text-white">Ritesh Srivastava</strong>, educator and founder of SHIKSHA Coaching Institute. My goal is to make learning practical, interactive, and enjoyable for students while building helpful web tools and games.
+                        Hello everyone! I am <strong class="text-white">Ritesh Srivastava</strong>, an educator and creator passionate about making Education practical, interactive, and enjoyable while building useful web tools and browser games.
                     </p>
                     <p>
-                        This hub brings together <strong class="text-white">SHIKSHA</strong>, <strong class="text-white">ApnaBazaar</strong>, and <strong class="text-white">V-Tube</strong> alongside browser games like <strong class="text-white">Mystic Warrior 2D</strong>[cite: 1], <strong class="text-white">Lanka Dahan</strong>[cite: 2], and <strong class="text-white">THOR - Wakanda Runner 3D</strong>[cite: 3].
+                        This hub brings together <strong class="text-white">Education</strong>, <strong class="text-white">ApnaBazaar</strong>, and <strong class="text-white">V-Tube</strong> alongside browser games like <strong class="text-white">Mystic Warrior 2D</strong>[cite: 1, 6], <strong class="text-white">Lanka Dahan</strong>[cite: 2, 6], and <strong class="text-white">THOR - Wakanda Runner 3D</strong>[cite: 3, 6].
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-4 pt-4">
@@ -481,14 +521,14 @@
             <div class="flex justify-center flex-wrap gap-6 text-slate-400">
                 <a href="#" onclick="switchTab('home'); return false;" class="hover:text-white transition">Home</a>
                 <a href="#" onclick="switchTab('games'); return false;" class="hover:text-white transition">HTML Games</a>
-                <a href="#" onclick="switchTab('portals'); return false;" class="hover:text-white transition">Portals & Apps</a>
+                <a href="#" onclick="switchTab('portals'); return false;" class="hover:text-white transition">Portals &amp; Apps</a>
                 <a href="#" onclick="switchTab('socials'); return false;" class="hover:text-white transition">Social Hub</a>
                 <a href="#" onclick="switchTab('about'); return false;" class="hover:text-white transition">About</a>
             </div>
         </div>
     </footer>
 
-    <!-- ==================== FEATURE 2: IN-APP GAME LAUNCHER MODAL ==================== -->
+    <!-- ==================== IN-APP GAME LAUNCHER MODAL ==================== -->
     <div id="game-launcher-modal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex flex-col">
         <div class="h-16 px-4 sm:px-6 bg-slate-900 border-b border-slate-800 flex items-center justify-between gap-3 shrink-0">
             <div class="flex items-center space-x-3 min-w-0">
@@ -509,7 +549,7 @@
         </div>
     </div>
 
-    <!-- ==================== FEATURE 4: ONE-CLICK SHARE & QR CODE MODAL ==================== -->
+    <!-- ==================== ONE-CLICK SHARE & QR CODE MODAL ==================== -->
     <div id="share-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-card rounded-3xl max-w-md w-full p-6 border border-slate-700 text-center space-y-5 relative">
             <button onclick="closeShareModal()" class="absolute top-4 right-4 w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center cursor-pointer">
@@ -517,7 +557,7 @@
             </button>
             <div class="space-y-1">
                 <h3 class="text-xl font-extrabold text-white">Share EmmRitez Hub</h3>
-                <p class="text-xs text-slate-400">Scan QR or share the portal link with students & friends</p>
+                <p class="text-xs text-slate-400">Scan QR or share the portal link with students &amp; friends</p>
             </div>
 
             <div class="bg-white p-3 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center shadow-lg">
@@ -544,7 +584,9 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Exact Social & Portal Links Configuration
+        // Optional Custom Spotlight Photo Path (e.g., 'assets/spotlight.jpg'). Leave empty '' to show icon badge.
+        const SPOTLIGHT_PHOTO = '';
+
         const SOCIAL_LINKS = {
             youtube: 'https://youtube.com/@theemmritezshow?si=3b_oprsLVWfkgjDR',
             facebook: 'https://www.facebook.com/share/1DZDkFwLB6/',
@@ -556,6 +598,114 @@
         document.getElementById('link-facebook').href = SOCIAL_LINKS.facebook;
         document.getElementById('link-instagram').href = SOCIAL_LINKS.instagram;
         document.getElementById('link-whatsapp').href = SOCIAL_LINKS.whatsapp;
+
+        // Manage Spotlight Photo safely with fallback to icon badge
+        (function initSpotlightPhoto() {
+            const imgEl = document.getElementById('spotlight-custom-img');
+            const iconBox = document.getElementById('spotlight-default-icon');
+            if (!SPOTLIGHT_PHOTO) return;
+
+            imgEl.onload = () => {
+                iconBox.classList.add('hidden');
+                imgEl.classList.remove('hidden');
+            };
+            imgEl.onerror = () => {
+                imgEl.classList.add('hidden');
+                iconBox.classList.remove('hidden');
+            };
+            imgEl.src = encodeURI(SPOTLIGHT_PHOTO);
+        })();
+
+        // Dynamic Banner Slides
+        const BANNER_SLIDES = [
+            {
+                badge: 'Official Hub by Ritesh Srivastava',
+                headline: 'All-in-One Web Portals',
+                subheadline: 'EMMRITEZ - ALL IN ONE',
+                desc: 'Welcome to my central digital hub! Access Education, ApnaBazaar, V-Tube, and play epic browser games directly inside the portal or install as an app.',
+                btnText: 'Play HTML Games',
+                btnIcon: 'fa-solid fa-gamepad',
+                spotlightIcon: 'fa-solid fa-rocket',
+                action: () => switchTab('games')
+            },
+            {
+                badge: '2D & 3D Browser Arcade',
+                headline: 'Play Action & Runner Games',
+                subheadline: 'MYSTIC • LANKA DAHAN • THOR 3D',
+                desc: 'Launch Mystic Warrior 2D, Lanka Dahan (Ramayana), and THOR - Wakanda Runner 3D in full-screen theater mode right in your browser.',
+                btnText: 'Open Games Hub',
+                btnIcon: 'fa-solid fa-dice',
+                spotlightIcon: 'fa-solid fa-gamepad',
+                action: () => switchTab('games')
+            },
+            {
+                badge: 'Education, Store & Media',
+                headline: 'Smart Learning & Web Apps',
+                subheadline: 'EDUCATION • APNABAZAAR • V-TUBE',
+                desc: 'Jump straight into Education resources, browse ApnaBazaar, or watch videos on V-Tube with one click.',
+                btnText: 'Explore Portals',
+                btnIcon: 'fa-solid fa-globe',
+                spotlightIcon: 'fa-solid fa-graduation-cap',
+                action: () => switchTab('portals')
+            }
+        ];
+
+        let bannerIndex = 0;
+        let bannerAutoplay = true;
+        let bannerTimer = null;
+
+        function renderBannerSlide(idx) {
+            bannerIndex = (idx + BANNER_SLIDES.length) % BANNER_SLIDES.length;
+            const slide = BANNER_SLIDES[bannerIndex];
+
+            document.getElementById('banner-badge').textContent = slide.badge;
+            document.getElementById('banner-headline').textContent = slide.headline;
+            document.getElementById('banner-subheadline').textContent = slide.subheadline;
+            document.getElementById('banner-desc').textContent = slide.desc;
+
+            const primaryBtn = document.getElementById('banner-primary-btn');
+            primaryBtn.innerHTML = `<i class="${slide.btnIcon} text-xl"></i><span>${slide.btnText}</span>`;
+            primaryBtn.onclick = slide.action;
+
+            const faIcon = document.getElementById('spotlight-icon-fa');
+            if (faIcon) faIcon.className = `${slide.spotlightIcon}`;
+
+            const dotsContainer = document.getElementById('banner-dots');
+            dotsContainer.innerHTML = '';
+            BANNER_SLIDES.forEach((_, i) => {
+                const dot = document.createElement('button');
+                dot.className = i === bannerIndex
+                    ? 'w-6 h-2 rounded-full bg-indigo-400 transition-all cursor-pointer'
+                    : 'w-2 h-2 rounded-full bg-slate-600 hover:bg-slate-400 transition-all cursor-pointer';
+                dot.onclick = () => renderBannerSlide(i);
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function nextBannerSlide() { renderBannerSlide(bannerIndex + 1); }
+        function prevBannerSlide() { renderBannerSlide(bannerIndex - 1); }
+
+        function toggleBannerAutoplay() {
+            bannerAutoplay = !bannerAutoplay;
+            const icon = document.querySelector('#banner-play-btn i');
+            if (bannerAutoplay) {
+                icon.className = 'fa-solid fa-pause';
+                startBannerTimer();
+            } else {
+                icon.className = 'fa-solid fa-play';
+                clearInterval(bannerTimer);
+            }
+        }
+
+        function startBannerTimer() {
+            clearInterval(bannerTimer);
+            bannerTimer = setInterval(() => {
+                if (bannerAutoplay) nextBannerSlide();
+            }, 5000);
+        }
+
+        renderBannerSlide(0);
+        startBannerTimer();
 
         // Tab Navigation
         function switchTab(tabId) {
@@ -587,7 +737,7 @@
             icon.className = menu.classList.contains('hidden') ? "fa-solid fa-bars text-xl" : "fa-solid fa-xmark text-xl";
         }
 
-        // Feature 2: In-App Full-Screen Game Launcher (Normalized URL encoding)
+        // In-App Full-Screen Game Launcher
         function openGameLauncher(title, fileUrl) {
             const safeUrl = encodeURI(decodeURI(fileUrl));
             document.getElementById('launcher-game-title').textContent = title;
@@ -603,7 +753,7 @@
             document.body.style.overflow = '';
         }
 
-        // Feature 4: One-Click Share & QR Code Modal
+        // One-Click Share & QR Code Modal
         function getPortalUrl() {
             return window.location.href;
         }
@@ -612,7 +762,7 @@
             const portalUrl = getPortalUrl();
             document.getElementById('share-url-input').value = portalUrl;
             document.getElementById('qr-code-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(portalUrl)}`;
-            const shareText = encodeURIComponent(`Check out EmmRitez - All in One Hub (Games, SHIKSHA, ApnaBazaar & V-Tube): ${portalUrl}`);
+            const shareText = encodeURIComponent(`Check out EmmRitez - All in One Hub (Games, Education, ApnaBazaar & V-Tube): ${portalUrl}`);
             document.getElementById('whatsapp-share-btn').href = `https://wa.me/?text=${shareText}`;
             document.getElementById('copy-btn-label').textContent = 'Copy';
             document.getElementById('share-modal').classList.remove('hidden');
@@ -635,7 +785,7 @@
                 try {
                     await navigator.share({
                         title: 'EmmRitez - All in One Hub',
-                        text: 'Play HTML games and explore SHIKSHA, ApnaBazaar & V-Tube!',
+                        text: 'Play HTML games and explore Education, ApnaBazaar & V-Tube!',
                         url: portalUrl
                     });
                 } catch (_) {}
@@ -644,15 +794,15 @@
             }
         }
 
-        // Feature 1 & 5: Custom SVG Icon, Favicon, PWA Manifest & Install Prompt
+        // Custom SVG Icon, Favicon, PWA Manifest & Install Prompt
         (function initPWAAndIcons() {
             const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                 <defs><linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stop-color="#4f46e5"/><stop offset="55%" stop-color="#9333ea"/><stop offset="100%" stop-color="#ec4899"/>
                 </linearGradient></defs>
                 <rect width="64" height="64" rx="16" fill="url(#g)"/>
-                <path d="M16 20H32V25H22V29.5H30V34.5H22V39H32V44H16V20Z" fill="white"/>
-                <path d="M36 20H45.5C49.5 20 52 22.4 52 26.2C52 29.1 50.3 31.2 47.6 31.9L52.8 44H46.8L42.3 32.8H41V44H36V20ZM41 24.5V28.7H45C46.5 28.7 47.4 27.9 47.4 26.6C47.4 25.3 46.5 24.5 45 24.5H41Z" fill="#fde047"/>
+                <path d="M18 18H34V23H23V27.5H32V32.5H23V37H34V42H18V18Z" fill="white"/>
+                <path d="M37 18H46.5C50.5 18 53 20.4 53 24.2C53 27.1 51.3 29.2 48.6 29.9L53.8 42H47.8L43.3 30.8H42V42H37V18ZM42 24.5V28.7H46C47.5 28.7 48.4 27.9 48.4 26.6C48.4 25.3 47.5 24.5 46 24.5H42Z" fill="#fde047"/>
             </svg>`;
             const iconDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
             document.getElementById('dynamic-favicon').href = iconDataUrl;
@@ -661,7 +811,7 @@
             const manifestObj = {
                 name: 'EmmRitez - All in One Hub',
                 short_name: 'EmmRitez Hub',
-                description: 'HTML Arcade Games, SHIKSHA Portal, ApnaBazaar & V-Tube by Ritesh Srivastava',
+                description: 'HTML Arcade Games, Education, ApnaBazaar & V-Tube by Ritesh Srivastava',
                 start_url: window.location.href,
                 display: 'standalone',
                 background_color: '#020617',
@@ -676,7 +826,7 @@
 
             if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
                 const swCode = `
-                    const CACHE = 'emmritez-hub-v2';
+                    const CACHE = 'emmritez-hub-v4';
                     self.addEventListener('install', e => {
                         self.skipWaiting();
                         e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./'])));
