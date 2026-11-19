@@ -266,7 +266,7 @@
                             <h3 class="text-xl font-bold text-white mb-2">Mystic Warrior 2D</h3>
                             <p class="text-slate-400 text-sm">Classic Contra-style run-and-gun combat with divine weapons (Vajra Bolt, Agni Laser & Sudarshan Chakra)[cite: 1].</p>
                         </div>
-                        <button onclick="openGameLauncher('Mystic Warrior 2D', 'Mystic%20Warrior%202D.html')" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="openGameLauncher('Mystic Warrior 2D', encodeURI('Mystic Warrior 2D.html'))" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
                         </button>
                     </div>
@@ -284,7 +284,7 @@
                             <h3 class="text-xl font-bold text-white mb-2">Lanka Dahan (Ramayana)</h3>
                             <p class="text-slate-400 text-sm">An 8-stage platformer where Hanuman Ji leaps across the ocean, defeats Lankini, and burns Lanka's palaces[cite: 2].</p>
                         </div>
-                        <button onclick="openGameLauncher('Lanka Dahan (Ramayana)', 'Lanka%20Dahan%20(Ramayana).html')" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-sm transition shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="openGameLauncher('Lanka Dahan (Ramayana)', encodeURI('Lanka Dahan (Ramayana).html'))" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-sm transition shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
                         </button>
                     </div>
@@ -302,7 +302,7 @@
                             <h3 class="text-xl font-bold text-white mb-2">THOR - Wakanda Runner 3D</h3>
                             <p class="text-slate-400 text-sm">Fast-paced 3D endless runner featuring Thor, Stormbreaker axe throws, Infinity Stones, and Thanos battles[cite: 3].</p>
                         </div>
-                        <button onclick="openGameLauncher('THOR - Wakanda Runner 3D', 'THOR%20-%20Wakanda%20Runner%203D.html')" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition shadow-lg shadow-sky-600/30 flex items-center justify-center space-x-2 cursor-pointer">
+                        <button onclick="openGameLauncher('THOR - Wakanda Runner 3D', encodeURI('THOR - Wakanda Runner 3D.html'))" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition shadow-lg shadow-sky-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
                         </button>
                     </div>
@@ -587,11 +587,12 @@
             icon.className = menu.classList.contains('hidden') ? "fa-solid fa-bars text-xl" : "fa-solid fa-xmark text-xl";
         }
 
-        // Feature 2: In-App Full-Screen Game Launcher
+        // Feature 2: In-App Full-Screen Game Launcher (Normalized URL encoding)
         function openGameLauncher(title, fileUrl) {
+            const safeUrl = encodeURI(decodeURI(fileUrl));
             document.getElementById('launcher-game-title').textContent = title;
-            document.getElementById('launcher-external-link').href = fileUrl;
-            document.getElementById('game-iframe').src = fileUrl;
+            document.getElementById('launcher-external-link').href = safeUrl;
+            document.getElementById('game-iframe').src = safeUrl;
             document.getElementById('game-launcher-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
@@ -675,10 +676,13 @@
 
             if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
                 const swCode = `
-                    const CACHE = 'emmritez-hub-v1';
+                    const CACHE = 'emmritez-hub-v2';
                     self.addEventListener('install', e => {
                         self.skipWaiting();
                         e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./'])));
+                    });
+                    self.addEventListener('activate', e => {
+                        e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
                     });
                     self.addEventListener('fetch', e => {
                         e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
