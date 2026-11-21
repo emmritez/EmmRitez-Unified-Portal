@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EmmRitez - All in One Hub | Games, Education, MoralMate &amp; JHALAK</title>
 
-    <!-- PWA Meta Tags & Dynamic Favicon / Manifest -->
+    <!-- PWA Meta Tags & Static Manifest / PNG Icon Links -->
     <meta name="theme-color" content="#0f172a">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="EmmRitez Hub">
-    <link id="dynamic-favicon" rel="icon" type="image/svg+xml">
-    <link id="apple-touch-icon" rel="apple-touch-icon">
-    <link id="pwa-manifest" rel="manifest">
+    <link rel="icon" type="image/png" href="./512x512.png">
+    <link rel="apple-touch-icon" href="./512x512.png">
+    <link rel="manifest" href="./manifest.json">
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -126,7 +126,7 @@
                 <button onclick="switchTab('games')" id="nav-games" class="nav-btn px-3 py-2 rounded-xl text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-900/60 cursor-pointer">
                     <i class="fa-solid fa-dice mr-1 text-indigo-400"></i>HTML Games
                 </button>
-                <button onclick="switchTab('JHALAK')" id="nav-JHALAK" class="nav-btn px-3 py-2 rounded-xl text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-900/60 cursor-pointer">
+                <button onclick="switchTab('jhalak')" id="nav-jhalak" class="nav-btn px-3 py-2 rounded-xl text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-900/60 cursor-pointer">
                     <img src="Jhalak Short Video App Logo.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" class="w-4 h-4 rounded object-cover inline-block mr-1 align-middle"><i class="fa-solid fa-clapperboard mr-1 text-rose-400" style="display:none;"></i>JHALAK - Short Video App
                 </button>
                 <button onclick="switchTab('moralmate')" id="nav-moralmate" class="nav-btn px-3 py-2 rounded-xl text-xs font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-900/60 cursor-pointer">
@@ -165,7 +165,7 @@
             <button onclick="switchTab('games'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition flex items-center space-x-3 text-slate-300 hover:bg-slate-900">
                 <i class="fa-solid fa-dice w-6 text-indigo-400"></i><span>HTML Games Hub</span>
             </button>
-            <button onclick="switchTab('JHALAK'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition flex items-center space-x-3 text-slate-300 hover:bg-slate-900">
+            <button onclick="switchTab('jhalak'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition flex items-center space-x-3 text-slate-300 hover:bg-slate-900">
                 <img src="Jhalak Short Video App Logo.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" class="w-6 h-6 rounded object-cover"><i class="fa-solid fa-clapperboard w-6 text-rose-400" style="display:none;"></i><span>JHALAK - Short Video App</span>
             </button>
             <button onclick="switchTab('moralmate'); toggleMobileMenu();" class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition flex items-center space-x-3 text-slate-300 hover:bg-slate-900">
@@ -222,7 +222,7 @@
                                 <i class="fa-solid fa-gamepad text-xl"></i>
                                 <span>Play HTML Games</span>
                             </button>
-                            <button onclick="switchTab('JHALAK')" class="px-8 py-4 rounded-2xl glass-card glass-card-hover font-semibold text-slate-200 transition-all flex items-center space-x-3 text-base cursor-pointer">
+                            <button onclick="switchTab('jhalak')" class="px-8 py-4 rounded-2xl glass-card glass-card-hover font-semibold text-slate-200 transition-all flex items-center space-x-3 text-base cursor-pointer">
                                 <i class="fa-solid fa-clapperboard text-rose-400 text-xl"></i>
                                 <span>JHALAK - Short Video App</span>
                             </button>
@@ -235,9 +235,9 @@
                             <div class="w-full h-full rounded-[22px] bg-slate-900/95 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
                                 <div class="absolute inset-0 bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
 
-                                <img id="spotlight-custom-img" src="" alt="EmmRitez Spotlight" class="hidden w-24 h-24 rounded-2xl object-cover border-2 border-indigo-400/60 shadow-lg mb-4 relative z-10">
+                                <img id="spotlight-custom-img" src="./512x512.png" alt="EmmRitez Spotlight" class="w-24 h-24 rounded-2xl object-cover border-2 border-indigo-400/60 shadow-lg mb-4 relative z-10" onerror="this.style.display='none'; document.getElementById('spotlight-default-icon').classList.remove('hidden');">
 
-                                <div id="spotlight-default-icon" class="w-20 h-20 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center mb-4 text-indigo-400 text-4xl shadow-inner relative z-10">
+                                <div id="spotlight-default-icon" class="hidden w-20 h-20 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center mb-4 text-indigo-400 text-4xl shadow-inner relative z-10">
                                     <i id="spotlight-icon-fa" class="fa-solid fa-rocket"></i>
                                 </div>
 
@@ -254,7 +254,7 @@
 
             <!-- Quick Highlights Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-                <div onclick="switchTab('JHALAK')" class="glass-card glass-card-hover p-8 rounded-3xl cursor-pointer transition group">
+                <div onclick="switchTab('jhalak')" class="glass-card glass-card-hover p-8 rounded-3xl cursor-pointer transition group">
                     <div class="w-14 h-14 rounded-2xl bg-rose-600/20 border border-rose-500/30 flex items-center justify-center text-rose-400 text-2xl mb-6 group-hover:scale-110 transition overflow-hidden">
                         <img src="Jhalak Short Video App Logo.png" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" class="w-full h-full object-cover"><i class="fa-solid fa-clapperboard" style="display:none;"></i>
                     </div>
@@ -269,7 +269,7 @@
                         <i class="fa-solid fa-gamepad"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-white">3 Epic HTML Games</h3>
-                    <p class="text-slate-400 text-sm mb-6">Play Mystic Warrior 2D, Lanka Dahan (Ramayana), and THOR 3D Runner in full-screen theater mode[cite: 1, 2, 3, 6].</p>
+                    <p class="text-slate-400 text-sm mb-6">Play Mystic Warrior 2D, Lanka Dahan (Ramayana), and THOR 3D Runner in full-screen theater mode.</p>
                     <span class="text-indigo-400 text-sm font-semibold flex items-center group-hover:translate-x-2 transition">
                         Play Now <i class="fa-solid fa-arrow-right ml-2"></i>
                     </span>
@@ -313,7 +313,7 @@
                     <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
                         <div>
                             <h3 class="text-xl font-bold text-white mb-2">Mystic Warrior 2D</h3>
-                            <p class="text-slate-400 text-sm">Classic Contra-style run-and-gun combat with divine weapons (Vajra Bolt, Agni Laser &amp; Sudarshan Chakra)[cite: 1].</p>
+                            <p class="text-slate-400 text-sm">Classic Contra-style run-and-gun combat with divine weapons (Vajra Bolt, Agni Laser &amp; Sudarshan Chakra).</p>
                         </div>
                         <button onclick="openGameLauncher('Mystic Warrior 2D', 'Mystic Warrior 2D.html')" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
@@ -331,7 +331,7 @@
                     <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
                         <div>
                             <h3 class="text-xl font-bold text-white mb-2">Lanka Dahan (Ramayana)</h3>
-                            <p class="text-slate-400 text-sm">An 8-stage platformer where Hanuman Ji leaps across the ocean, defeats Lankini, and burns Lanka's palaces[cite: 2].</p>
+                            <p class="text-slate-400 text-sm">An 8-stage platformer where Hanuman Ji leaps across the ocean, defeats Lankini, and burns Lanka's palaces.</p>
                         </div>
                         <button onclick="openGameLauncher('Lanka Dahan (Ramayana)', 'Lanka Dahan (Ramayana).html')" class="w-full py-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-sm transition shadow-lg shadow-amber-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
@@ -349,7 +349,7 @@
                     <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
                         <div>
                             <h3 class="text-xl font-bold text-white mb-2">THOR - Wakanda Runner 3D</h3>
-                            <p class="text-slate-400 text-sm">Fast-paced 3D endless runner featuring Thor, Stormbreaker axe throws, Infinity Stones, and Thanos battles[cite: 3].</p>
+                            <p class="text-slate-400 text-sm">Fast-paced 3D endless runner featuring Thor, Stormbreaker axe throws, Infinity Stones, and Thanos battles.</p>
                         </div>
                         <button onclick="openGameLauncher('THOR - Wakanda Runner 3D', 'THOR - Wakanda Runner 3D.html')" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm transition shadow-lg shadow-sky-600/30 flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-solid fa-play"></i><span>Play in Hub</span>
@@ -360,7 +360,7 @@
         </section>
 
         <!-- ==================== TAB 3: JHALAK - SHORT VIDEO APP ==================== -->
-        <section id="tab-JHALAK" class="tab-content hidden space-y-8">
+        <section id="tab-jhalak" class="tab-content hidden space-y-8">
             <div class="glass-card rounded-3xl p-8 sm:p-12 border border-slate-800 relative overflow-hidden">
                 <div class="absolute -right-20 -top-20 w-80 h-80 bg-rose-500/15 rounded-full blur-3xl pointer-events-none"></div>
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
@@ -378,7 +378,7 @@
                             <li class="flex items-center space-x-3"><i class="fa-solid fa-circle-check text-rose-400"></i><span>Custom logo &amp; icon integrated</span></li>
                         </ul>
                         <div class="pt-2 flex flex-wrap gap-4">
-                            <a id="JHALAK-app-link" href="https://emmritez.github.io/JHALAK/" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-bold shadow-lg shadow-rose-600/30 transition flex items-center space-x-3">
+                            <a id="jhalak-app-link" href="https://emmritez.github.io/JHALAK/" target="_blank" rel="noopener noreferrer" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-bold shadow-lg shadow-rose-600/30 transition flex items-center space-x-3">
                                 <i class="fa-solid fa-play text-lg"></i>
                                 <span>Launch JHALAK App</span>
                             </a>
@@ -387,16 +387,16 @@
                     <div class="lg:col-span-5 flex justify-center">
                         <div class="w-full max-w-sm rounded-3xl bg-slate-900/90 border border-rose-500/30 p-6 text-center space-y-4 shadow-xl">
                             <div class="w-24 h-24 rounded-2xl bg-rose-600/15 border border-rose-500/40 mx-auto flex items-center justify-center overflow-hidden shadow-md">
-                                <img id="JHALAK-logo-img" src="Jhalak Short Video App Logo.png" alt="JHALAK - Short Video App Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-contain p-1">
+                                <img id="jhalak-logo-img" src="Jhalak Short Video App Logo.png" alt="JHALAK - Short Video App Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-contain p-1">
                                 <div class="w-full h-full items-center justify-center text-rose-400 text-4xl" style="display:none;">
                                     <i class="fa-solid fa-clapperboard"></i>
                                 </div>
                             </div>
                             <h3 class="text-xl font-bold text-white">JHALAK - Short Video App</h3>
-                            <p id="JHALAK-url-preview" class="text-xs text-slate-400 leading-relaxed break-all">
+                            <p id="jhalak-url-preview" class="text-xs text-slate-400 leading-relaxed break-all">
                                 Direct link: <span class="text-rose-300">https://emmritez.github.io/JHALAK/</span>
                             </p>
-                            <a id="JHALAK-card-btn" href="https://emmritez.github.io/JHALAK/" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center justify-center space-x-2">
+                            <a id="jhalak-card-btn" href="https://emmritez.github.io/JHALAK/" target="_blank" rel="noopener noreferrer" class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-sm transition flex items-center justify-center space-x-2">
                                 <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Open Short Video App</span>
                             </a>
                         </div>
@@ -596,11 +596,11 @@
                         Hello everyone! I am <strong class="text-white">Ritesh Srivastava</strong>, an educator and creator passionate about making Education and moral learning practical, interactive, and enjoyable while building useful web tools and browser games.
                     </p>
                     <p>
-                        This hub brings together <strong class="text-white">Education</strong>, <strong class="text-white">JHALAK - Short Video App</strong>, <strong class="text-white">MoralMate</strong>, <strong class="text-white">ApnaBazaar</strong>, and <strong class="text-white">V-Tube</strong> alongside browser games like <strong class="text-white">Mystic Warrior 2D</strong>[cite: 1, 6], <strong class="text-white">Lanka Dahan</strong>[cite: 2, 6], and <strong class="text-white">THOR - Wakanda Runner 3D</strong>[cite: 3, 6].
+                        This hub brings together <strong class="text-white">Education</strong>, <strong class="text-white">JHALAK - Short Video App</strong>, <strong class="text-white">MoralMate</strong>, <strong class="text-white">ApnaBazaar</strong>, and <strong class="text-white">V-Tube</strong> alongside browser games like <strong class="text-white">Mystic Warrior 2D</strong>, <strong class="text-white">Lanka Dahan</strong>, and <strong class="text-white">THOR - Wakanda Runner 3D</strong>.
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-4 pt-4">
-                    <button onclick="switchTab('JHALAK')" class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm transition cursor-pointer">
+                    <button onclick="switchTab('jhalak')" class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-sm transition cursor-pointer">
                         <i class="fa-solid fa-clapperboard mr-2"></i>JHALAK - Short Video App
                     </button>
                     <button onclick="switchTab('games')" class="px-6 py-3 rounded-xl glass-card glass-card-hover font-semibold text-slate-200 text-sm transition cursor-pointer">
@@ -619,7 +619,7 @@
             <div class="flex justify-center flex-wrap gap-6 text-slate-400">
                 <a href="#" onclick="switchTab('home'); return false;" class="hover:text-white transition">Home</a>
                 <a href="#" onclick="switchTab('games'); return false;" class="hover:text-white transition">HTML Games</a>
-                <a href="#" onclick="switchTab('JHALAK'); return false;" class="hover:text-white transition">JHALAK - Short Video App</a>
+                <a href="#" onclick="switchTab('jhalak'); return false;" class="hover:text-white transition">JHALAK - Short Video App</a>
                 <a href="#" onclick="switchTab('moralmate'); return false;" class="hover:text-white transition">MoralMate</a>
                 <a href="#" onclick="switchTab('portals'); return false;" class="hover:text-white transition">Portals &amp; Apps</a>
                 <a href="#" onclick="switchTab('socials'); return false;" class="hover:text-white transition">Social Hub</a>
@@ -684,21 +684,18 @@
 
     <!-- JavaScript Application Logic -->
     <script>
-        // Optional Custom Spotlight Photo Path (e.g., 'assets/spotlight.jpg'). Leave empty '' to show icon badge.
-        const SPOTLIGHT_PHOTO = '';
-
         // Short Video App Logo & Link Configuration
         const SHORT_VIDEO_LOGO = 'Jhalak Short Video App Logo.png';
         const SHORT_VIDEO_APP_URL = 'https://emmritez.github.io/JHALAK/';
 
         (function initShortVideoConfig() {
             const safeLogo = encodeURI(SHORT_VIDEO_LOGO);
-            const logoImg = document.getElementById('JHALAK-logo-img');
+            const logoImg = document.getElementById('jhalak-logo-img');
             if (logoImg) logoImg.src = safeLogo;
 
-            const linkA = document.getElementById('JHALAK-app-link');
-            const linkBtn = document.getElementById('JHALAK-card-btn');
-            const preview = document.getElementById('JHALAK-url-preview');
+            const linkA = document.getElementById('jhalak-app-link');
+            const linkBtn = document.getElementById('jhalak-card-btn');
+            const preview = document.getElementById('jhalak-url-preview');
 
             if (linkA) linkA.href = SHORT_VIDEO_APP_URL;
             if (linkBtn) linkBtn.href = SHORT_VIDEO_APP_URL;
@@ -718,23 +715,6 @@
         document.getElementById('link-facebook').href = SOCIAL_LINKS.facebook;
         document.getElementById('link-instagram').href = SOCIAL_LINKS.instagram;
         document.getElementById('link-whatsapp').href = SOCIAL_LINKS.whatsapp;
-
-        // Manage Spotlight Photo safely with fallback to icon badge
-        (function initSpotlightPhoto() {
-            const imgEl = document.getElementById('spotlight-custom-img');
-            const iconBox = document.getElementById('spotlight-default-icon');
-            if (!SPOTLIGHT_PHOTO) return;
-
-            imgEl.onload = () => {
-                iconBox.classList.add('hidden');
-                imgEl.classList.remove('hidden');
-            };
-            imgEl.onerror = () => {
-                imgEl.classList.add('hidden');
-                iconBox.classList.remove('hidden');
-            };
-            imgEl.src = encodeURI(SPOTLIGHT_PHOTO);
-        })();
 
         // Dynamic Banner Slides
         const BANNER_SLIDES = [
@@ -756,7 +736,7 @@
                 btnText: 'Open JHALAK',
                 btnIcon: 'fa-solid fa-clapperboard',
                 spotlightIcon: 'fa-solid fa-clapperboard',
-                action: () => switchTab('JHALAK')
+                action: () => switchTab('jhalak')
             },
             {
                 badge: 'Values, Education & Portals',
@@ -914,51 +894,10 @@
             }
         }
 
-        // Custom SVG Icon, Favicon, PWA Manifest & Install Prompt
+        // Register Service Worker & PWA Install Prompt using static manifest.json & sw.js
         (function initPWAAndIcons() {
-            const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-                <defs><linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#4f46e5"/><stop offset="55%" stop-color="#9333ea"/><stop offset="100%" stop-color="#ec4899"/>
-                </linearGradient></defs>
-                <rect width="64" height="64" rx="16" fill="url(#g)"/>
-                <path d="M18 18H34V23H23V27.5H32V32.5H23V37H34V42H18V18Z" fill="white"/>
-                <path d="M37 18H46.5C50.5 18 53 20.4 53 24.2C53 27.1 51.3 29.2 48.6 29.9L53.8 42H47.8L43.3 30.8H42V42H37V18ZM42 24.5V28.7H46C47.5 28.7 48.4 27.9 48.4 26.6C48.4 25.3 47.5 24.5 46 24.5H42Z" fill="#fde047"/>
-            </svg>`;
-            const iconDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
-            document.getElementById('dynamic-favicon').href = iconDataUrl;
-            document.getElementById('apple-touch-icon').href = iconDataUrl;
-
-            const manifestObj = {
-                name: 'EmmRitez - All in One Hub',
-                short_name: 'EmmRitez Hub',
-                description: 'HTML Arcade Games, JHALAK, MoralMate, Education, ApnaBazaar & V-Tube by Ritesh Srivastava',
-                start_url: window.location.href,
-                display: 'standalone',
-                background_color: '#020617',
-                theme_color: '#0f172a',
-                icons: [
-                    { src: iconDataUrl, sizes: '192x192', type: 'image/svg+xml', purpose: 'any maskable' },
-                    { src: iconDataUrl, sizes: '512x512', type: 'image/svg+xml', purpose: 'any maskable' }
-                ]
-            };
-            const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
-            document.getElementById('pwa-manifest').href = URL.createObjectURL(manifestBlob);
-
             if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-                const swCode = `
-                    const CACHE = 'emmritez-hub-v7';
-                    self.addEventListener('install', e => {
-                        self.skipWaiting();
-                        e.waitUntil(caches.open(CACHE).then(c => c.addAll(['./'])));
-                    });
-                    self.addEventListener('activate', e => {
-                        e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
-                    });
-                    self.addEventListener('fetch', e => {
-                        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-                    });
-                `;
-                navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).catch(() => {});
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
             }
 
             let deferredPrompt = null;
